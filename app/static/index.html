@@ -2,38 +2,40 @@
 <html>
 <head>
     <title>Flask-SocketIO Test</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 </head>
 <body>
-<div class="container">
-    <h2>Test</h2>
-<div>
-    <strong>Phone:</strong><br/>
-    <label for="phoneAvailability">Availability</label>
-    <input type="checkbox" id="phoneAvailability" checked>
-    <br/>
-    <label for="phoneAvailability">Battery</label>
-    <input type="number" id="phoneBattery" value="100">
-    <br/><br/>
-    <strong>Watch:</strong><br/>
-    <label for="watchAvailability">Availability</label>
-    <input type="checkbox" id="watchAvailability">
-    <br/>
-    <label for="watchBattery">Battery</label>
-    <input type="number" id="watchBattery" value="80">
-    <br/>
-    <br/>
-    <button class="btn btn-warning" onclick="sendDeviceData()">Send</button>
-</div>
-<hr/>
-<form id="disconnect" method="POST" action="#">
-    <input class="btn btn-sm btn-danger" type="submit" value="Disconnect">
-</form>
-<div id="log"></div>
-<div id="deviceStatus"></div>
-<div id="phoneData"></div>
-<h2>Current Activity: <span id="currentActivity"></span></h2>
-<canvas id="myChart" height="200"></canvas>
+<div class="container-flex" style="padding: 50px;">
+    <h2>Demonstration</h2>
+    <div>
+        <strong>Phone:</strong><br/>
+        <label for="phoneAvailability">Availability</label>
+        <input type="checkbox" id="phoneAvailability" checked>
+        <br/>
+        <label for="phoneAvailability">Battery</label>
+        <input type="number" id="phoneBattery" value="100">
+        <br/><br/>
+        <strong>Watch:</strong><br/>
+        <label for="watchAvailability">Availability</label>
+        <input type="checkbox" id="watchAvailability">
+        <br/>
+        <label for="watchBattery">Battery</label>
+        <input type="number" id="watchBattery" value="80">
+        <br/>
+        <br/>
+        <button class="btn btn-warning" onclick="sendDeviceData()">Send</button>
+    </div>
+    <hr/>
+    <form id="disconnect" method="POST" action="#">
+        <input class="btn btn-sm btn-danger" type="submit" value="Disconnect">
+    </form>
+    <div id="log"></div>
+    <div id="deviceStatus"></div>
+    <div id="phoneData"></div>
+    <h2>Current Activity: <span id="currentActivity"></span></h2>
+    <h2>Selected Model: <span id="selectedModel"></span></h2>
+    <canvas id="myChart" height="200"></canvas>
 </div>
 </body>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"
@@ -45,9 +47,12 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
 <script type="text/javascript" charset="utf-8">
     let socket = null;
-    let x = [];
-    let y = [];
-    let z = [];
+    let phoneX = [];
+    let phoneY = [];
+    let phoneZ = [];
+    let watchX = [];
+    let watchY = [];
+    let watchZ = [];
     let lables = [];
     let chart;
     const activities = {
@@ -56,7 +61,7 @@
         "C": "stairs",
         "D": "sitting",
         "E": "standing",
-        "F":"typing",
+        "F": "typing",
         "G": "teeth",
         "H": "soup",
         "I": "chips",
@@ -77,49 +82,42 @@
         //     http[s]://<domain>:<port>[/<namespace>]
         socket = io();
 
-        // Event handler for new connections.
-        // The callback function is invoked when a connection with the
-        // server is established.
-        socket.on('connect', function () {
-            socket.emit('my_event', {data: 'I\'m connected!'});
-        });
-
-        // Event handler for server sent data.
-        // The callback function is invoked whenever the server emits data
-        // to the client. The data is then displayed in the "Received"
-        // section of the page.
-        socket.on('my_response', function (msg, cb) {
-            $('#log').append('<br>' + $('<div/>').text('Received #' + msg.count + ': ' + msg.data).html());
-            if (cb)
-                cb();
-        });
-
-        socket.on('device_status_response', function (msg, cb) {
-            $('#deviceStatus').html(JSON.stringify(msg.data));
+        socket.on('model_change', function (msg, cb) {
+            console.log(msg)
             if (cb)
                 cb();
         });
 
 
         socket.on('prediction', function (msg, cb) {
-            console.log(msg.data)
+            let activity = 'No sensors available'
+            if (msg.data.prediction !== null) {
+                activity = activities[msg.data.prediction]
+            }
+            $('#currentActivity').text(activity);
             if (cb)
                 cb();
         });
 
-        socket.on('phone_data', function (msg, cb) {
+        socket.on('sensor_data', function (msg, cb) {
             const phoneData = JSON.parse(msg.data)[0];
             $('#phoneData').html(JSON.stringify(phoneData));
-            $('#currentActivity').text(activities[phoneData['activity']]);
+            $('#selectedModel').text(msg.current_model_key);
             lables.push(phoneData['timestamp']);
-            x.push(phoneData['phone-accel-x']);
-            y.push(phoneData['phone-accel-y']);
-            z.push(parseFloat(phoneData['phone-accel-z']));
-            if(lables.length > 100){
+            phoneX.push(phoneData['phone-accel-x']);
+            phoneY.push(phoneData['phone-accel-y']);
+            phoneZ.push(phoneData['phone-accel-z']);
+            watchX.push(phoneData['watch-accel-x']);
+            watchY.push(phoneData['watch-accel-y']);
+            watchZ.push(phoneData['watch-accel-z']);
+            if (lables.length > 300) {
                 lables.shift();
-                x.shift();
-                y.shift();
-                z.shift();
+                phoneX.shift();
+                phoneY.shift();
+                phoneZ.shift();
+                watchX.shift();
+                watchY.shift();
+                watchZ.shift();
             }
             chart.update();
             if (cb)
@@ -147,7 +145,7 @@
 
     const initializeChart = () => {
         var ctx = document.getElementById('myChart').getContext('2d');
-        document.getElementById('myChart').height = 100;
+        document.getElementById('myChart').height = 80;
         chart = new Chart(ctx, {
             // The type of chart we want to create
             type: 'line',
@@ -156,23 +154,41 @@
             data: {
                 labels: lables,
                 datasets: [{
-                    label: 'x',
+                    label: 'phone accel x',
                     borderColor: 'rgb(255, 99, 132)',
                     fill: false,
-                    data: x
+                    data: phoneX
                 },
-                {
-                    label: 'y',
-                    borderColor: 'rgb(255,152,0)',
-                    fill: false,
-                    data: y
-                },
-                {
-                    label: 'z',
-                    borderColor: 'rgb(0,166,255)',
-                    fill: false,
-                    data: z
-                }]
+                    {
+                        label: 'phone accel y',
+                        borderColor: 'rgb(255,152,0)',
+                        fill: false,
+                        data: phoneY
+                    },
+                    {
+                        label: 'phone accel z',
+                        borderColor: 'rgb(0,166,255)',
+                        fill: false,
+                        data: phoneZ
+                    },
+                    {
+                        label: 'watch accel x',
+                        borderColor: 'rgb(34,166,179)',
+                        fill: false,
+                        data: watchX
+                    },
+                    {
+                        label: 'watch accel y',
+                        borderColor: 'rgb(56,103,214)',
+                        fill: false,
+                        data: watchY
+                    },
+                    {
+                        label: 'watch accel z',
+                        borderColor: 'rgb(75,101,132)',
+                        fill: false,
+                        data: watchZ
+                    }]
             },
 
             // Configuration options go here
@@ -188,13 +204,13 @@
 
         const data = [
             {
-                device: 'watch',
-                availability: watchAvailability,
+                name: 'watch',
+                isAvailable: watchAvailability,
                 battery: watchBattery
             },
             {
-                device: 'phone',
-                availability: phoneAvailability,
+                name: 'phone',
+                isAvailable: phoneAvailability,
                 battery: phoneBattery
             }
         ]

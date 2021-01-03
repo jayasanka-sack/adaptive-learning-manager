@@ -13,70 +13,71 @@ LABELS = ['A',
 le = preprocessing.LabelEncoder()
 le.fit(LABELS)
 LABEL = 'ActivityEncoded'
-available_sensors = ['phone-accel-x', 'phone-accel-y', 'phone-accel-z']
 normalization_max = 66.615074
 normalization_min = -78.47761
 models = None
 model_repository = {}
-current_model_key = None
 
 
 class HarService:
+    available_sensors = []
+    current_model_key = None
 
     @staticmethod
     def predict(data):
-        input_data = HarService.preProcessData(data)
-        if current_model_key is None:
+        if HarService.current_model_key is None:
             return {
                 'prediction': None,
-                'current_model_key': current_model_key
+                'current_model_key': HarService.current_model_key
             }
-        encoded_prediction = np.argmax(model_repository['currentModel'].predict(input_data), axis=1)
+        input_data = HarService.preProcessData(data)
+        encoded_prediction = np.argmax(model_repository[HarService.current_model_key].predict(input_data), axis=1)
         decoded_prediction = le.inverse_transform(encoded_prediction)[0]
         return {
             'prediction': decoded_prediction,
-            'current_model_key': current_model_key
+            'current_model_key': HarService.current_model_key
         }
 
     @staticmethod
     def preProcessData(data):
-        df = data[available_sensors]
+        df = data[HarService.available_sensors]
         df = (df - normalization_min) / (normalization_max - normalization_min)
         df = df.round(4)
         values = df.values
-        input_data = values.reshape(1, values.shape[0] * len(available_sensors))
+        input_data = values.reshape(1, values.shape[0] * len(HarService.available_sensors))
         return input_data
 
     @staticmethod
     def loadModels():
         global models
+        print('Loading model repository')
         with open('../models.json') as file:
             models = json.load(file)
         for model in models:
             model_repository[model['key']] = keras.models.load_model("../models/" + model['path'])
+        print('Successfully loaded the model repository')
 
     @staticmethod
     def monitor(status):
-        devices = json.loads(status)
-        global available_sensors
+        devices = status
         sensors = []
         for device in devices:
-            if device == 'phone':
+            if device['name'] == 'phone':
                 if device['isAvailable']:
                     sensors.extend(['phone-accel-x', 'phone-accel-y', 'phone-accel-z'])
-            elif device == 'watch':
+            elif device['name'] == 'watch':
                 if device['isAvailable']:
                     sensors.extend(['watch-accel-x', 'watch-accel-y', 'watch-accel-z'])
-        if collections.Counter(available_sensors) != collections.Counter(sensors):
+        if collections.Counter(HarService.available_sensors) != collections.Counter(sensors):
+            HarService.available_sensors = sensors
             HarService.analyse(status)
-            available_sensors = sensors
 
     @staticmethod
     def analyse(status):
         suitable_models = []
         # Choose suitable models by comparing the supported sensor list with the available sensor list
         for model in models:
-            if collections.Counter(model['sensors']) != collections.Counter(available_sensors):
+            if collections.Counter(model['sensors']) == collections.Counter(HarService.available_sensors):
                 suitable_models.append(model)
         if len(suitable_models) == 0:
             HarService.plan(None)
@@ -87,13 +88,12 @@ class HarService:
 
     @staticmethod
     def plan(selected_model_key):
-        if current_model_key != selected_model_key:
+        if HarService.current_model_key != selected_model_key:
             HarService.execute(selected_model_key)
 
     @staticmethod
     def execute(selected_model_key):
-        global current_model_key
-        current_model_key = selected_model_key
+        HarService.current_model_key = selected_model_key
 
     @staticmethod
     def accuracyComparator(model):

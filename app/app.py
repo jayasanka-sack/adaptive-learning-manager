@@ -16,6 +16,7 @@ async_mode = None
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret!'
 socketio = SocketIO(app, async_mode=async_mode)
+HarService.websocket = socketio
 thread = None
 thread_lock = Lock()
 column_names = ['activity',
@@ -34,16 +35,20 @@ HarService.loadModels()
 def background_thread():
     i = 0
     size = df.shape[0]
-    while i < size:
+    while True:
         socketio.sleep(0.05)
-        data = df.loc[i].to_frame().T.to_json(orient="records")
+        keys = HarService.available_sensors.copy()
+        keys.append('timestamp')
+        data = df[keys].loc[i].to_frame().T.to_json(orient="records")
         i += 1
-        socketio.emit('phone_data',
-                      {'data': data, 'count': i})
+        socketio.emit('sensor_data',
+                      {'data': data, 'current_model_key': HarService.current_model_key})
         if i % 200 == 0:
-            prediction = HarService.predict(df.iloc[i:(i - 200)])
+            prediction = HarService.predict(df.iloc[(i - 200): i])
             socketio.emit('prediction',
                           {'data': prediction})
+        if i == size:
+            i = 0
 
 
 @app.route('/')

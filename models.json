@@ -23,7 +23,7 @@
   },
   {
     "key": "model-03",
-    "name": "Model-03: Phone Accelerometer",
+    "name": "Model-03: Phone + Watch Accelerometer",
     "sensors": [
       "phone-accel-x",
       "phone-accel-y",
