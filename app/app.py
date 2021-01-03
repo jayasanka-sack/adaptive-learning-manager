@@ -4,6 +4,7 @@ from flask import Flask, render_template, session, request, \
     copy_current_request_context
 from flask_socketio import SocketIO, emit, disconnect
 import pandas as pd
+from service.HarService import HarService
 
 # Set this variable to "threading", "eventlet" or "gevent" to test the
 # different async modes, or leave it set to None for the application to choose
@@ -17,24 +18,32 @@ app.config['SECRET_KEY'] = 'secret!'
 socketio = SocketIO(app, async_mode=async_mode)
 thread = None
 thread_lock = Lock()
-column_names = ['user-id',
-                'activity',
+column_names = ['activity',
                 'timestamp',
-                'x-axis',
-                'y-axis',
-                'z-axis']
-df = pd.read_csv('../data.txt', header=None, names=column_names)
+                'watch-accel-x',
+                'watch-accel-y',
+                'watch-accel-z',
+                'phone-accel-x',
+                'phone-accel-y',
+                'phone-accel-z']
+
+df = pd.read_csv('../data.csv', header=None, names=column_names)
+HarService.loadModels()
 
 
 def background_thread():
-    count = 0
+    i = 0
     size = df.shape[0]
-    while count < size:
-        socketio.sleep(1)
-        data = df.loc[count].to_json(orient="records")
-        count += 1
+    while i < size:
+        socketio.sleep(0.05)
+        data = df.loc[i].to_frame().T.to_json(orient="records")
+        i += 1
         socketio.emit('phone_data',
-                      {'data': data, 'count': count})
+                      {'data': data, 'count': i})
+        if i % 200 == 0:
+            prediction = HarService.predict(df.iloc[i:(i - 200)])
+            socketio.emit('prediction',
+                          {'data': prediction})
 
 
 @app.route('/')
@@ -59,6 +68,7 @@ def my_broadcast_event(message):
 
 @socketio.event
 def device_status(message):
+    HarService.monitor(message)
     emit('device_status_response',
          {'data': message},
          broadcast=True)
