@@ -12,9 +12,10 @@ LABELS = ['A',
 
 le = preprocessing.LabelEncoder()
 le.fit(LABELS)
-LABEL = 'ActivityEncoded'
+# Normalization parameters
 normalization_max = 66.615074
 normalization_min = -78.47761
+# Model metadata
 models = None
 model_repository = {}
 
@@ -23,6 +24,7 @@ class HarService:
     available_sensors = []
     current_model_key = None
 
+    # Predict activities using provided sensor data
     @staticmethod
     def predict(data):
         if HarService.current_model_key is None:
@@ -38,6 +40,7 @@ class HarService:
             'current_model_key': HarService.current_model_key
         }
 
+    # Pre process data
     @staticmethod
     def preProcessData(data):
         df = data[HarService.available_sensors]
@@ -47,6 +50,7 @@ class HarService:
         input_data = values.reshape(1, values.shape[0] * len(HarService.available_sensors))
         return input_data
 
+    # Load the model repository
     @staticmethod
     def loadModels():
         global models
@@ -68,6 +72,7 @@ class HarService:
             elif device['name'] == 'watch':
                 if device['isAvailable']:
                     sensors.extend(['watch-accel-x', 'watch-accel-y', 'watch-accel-z'])
+        # Check if the contextual parameters has been changed
         if collections.Counter(HarService.available_sensors) != collections.Counter(sensors):
             HarService.available_sensors = sensors
             HarService.analyse(status)

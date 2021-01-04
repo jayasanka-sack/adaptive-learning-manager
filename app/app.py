@@ -6,11 +6,6 @@ from flask_socketio import SocketIO, emit, disconnect
 import pandas as pd
 from service.HarService import HarService
 
-# Set this variable to "threading", "eventlet" or "gevent" to test the
-# different async modes, or leave it set to None for the application to choose
-# the best option based on installed packages.
-from pandas.io import json
-
 async_mode = None
 
 app = Flask(__name__)
@@ -27,11 +22,12 @@ column_names = ['activity',
                 'phone-accel-x',
                 'phone-accel-y',
                 'phone-accel-z']
-
-df = pd.read_csv('../data.csv', header=None, names=column_names)
+# Read test data
+df = pd.read_csv('../data_compact.csv', header=None, names=column_names)
 HarService.loadModels()
 
 
+# Simulation thread
 def background_thread():
     i = 0
     size = df.shape[0]
@@ -56,21 +52,7 @@ def index():
     return render_template('index.html', async_mode=socketio.async_mode)
 
 
-@socketio.event
-def my_event(message):
-    session['receive_count'] = session.get('receive_count', 0) + 1
-    emit('my_response',
-         {'data': message['data'], 'count': session['receive_count']})
-
-
-@socketio.event
-def my_broadcast_event(message):
-    session['receive_count'] = session.get('receive_count', 0) + 1
-    emit('my_response',
-         {'data': message['data'], 'count': session['receive_count']},
-         broadcast=True)
-
-
+# Event to receive device status
 @socketio.event
 def device_status(message):
     HarService.monitor(message)
@@ -85,20 +67,12 @@ def disconnect_request():
     def can_disconnect():
         disconnect()
 
-    session['receive_count'] = session.get('receive_count', 0) + 1
-    # for this emit we use a callback function
-    # when the callback function is invoked we know that the message has been
-    # received and it is safe to disconnect
     emit('my_response',
-         {'data': 'Disconnected!', 'count': session['receive_count']},
+         {'data': 'Disconnected!'},
          callback=can_disconnect)
 
 
-@socketio.event
-def my_ping():
-    emit('my_pong')
-
-
+# Connect to the websocket
 @socketio.event
 def connect():
     global thread

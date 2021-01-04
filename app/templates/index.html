@@ -1,0 +1,44 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>Flask-SocketIO Test</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+</head>
+<body>
+<div class="container-flex" style="padding: 50px;">
+    <h2>Demonstration</h2>
+    <div>
+        <strong>Phone:</strong><br/>
+        <label for="phoneAvailability">Availability</label>
+        <input type="checkbox" id="phoneAvailability">
+        <br/><br/>
+        <strong>Watch:</strong><br/>
+        <label for="watchAvailability">Availability</label>
+        <input type="checkbox" id="watchAvailability">
+        <br/>
+        <button class="btn btn-warning" onclick="sendDeviceData()">Send</button>
+    </div>
+    <hr/>
+    <form id="disconnect" method="POST" action="#">
+        <input class="btn btn-sm btn-danger" type="submit" value="Disconnect">
+    </form>
+    <div id="log"></div>
+    <div id="deviceStatus"></div>
+    <div id="phoneData"></div>
+    <h2>Current Activity: <span id="currentActivity"></span></h2>
+    <h2>Selected Model: <span id="selectedModel"></span></h2>
+    <canvas id="myChart" height="200"></canvas>
+</div>
+</body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"
+        integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg=="
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/3.0.4/socket.io.js"
+        integrity="sha512-aMGMvNYu8Ue4G+fHa359jcPb1u+ytAF+P2SCb+PxrjCdO3n3ZTxJ30zuH39rimUggmTwmh2u7wvQsDTHESnmfQ=="
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+<script type = "text/javascript"
+         src = "{{ url_for('static', filename = 'index.js') }}" ></script>
+<script type="text/javascript" charset="utf-8"></script>
+</html>

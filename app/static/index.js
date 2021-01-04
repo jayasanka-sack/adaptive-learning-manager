@@ -1,0 +1,137 @@
+let socket = null;
+let phoneX = [];
+let phoneY = [];
+let phoneZ = [];
+let watchX = [];
+let watchY = [];
+let watchZ = [];
+let lables = [];
+let chart;
+const activities = {
+    "A": "walking",
+    "B": "jogging",
+    "C": "stairs",
+    "D": "sitting",
+    "E": "standing",
+}
+
+$(document).ready(function () {
+    initializeChart();
+    // Connect to the Socket.IO server.
+    socket = io();
+
+    socket.on('model_change', function (msg, cb) {
+        console.log(msg)
+        if (cb)
+            cb();
+    });
+
+    // Update the prediction
+    socket.on('prediction', function (msg, cb) {
+        let activity = 'No sensors available'
+        if (msg.data.prediction !== null) {
+            activity = activities[msg.data.prediction]
+        }
+        $('#currentActivity').text(activity);
+        if (cb)
+            cb();
+    });
+
+    // Display Sensor data on the graph
+    socket.on('sensor_data', function (msg, cb) {
+        const phoneData = JSON.parse(msg.data)[0];
+        $('#phoneData').html(JSON.stringify(phoneData));
+        $('#selectedModel').text(msg.current_model_key);
+        lables.push(phoneData['timestamp']);
+        phoneX.push(phoneData['phone-accel-x']);
+        phoneY.push(phoneData['phone-accel-y']);
+        phoneZ.push(phoneData['phone-accel-z']);
+        watchX.push(phoneData['watch-accel-x']);
+        watchY.push(phoneData['watch-accel-y']);
+        watchZ.push(phoneData['watch-accel-z']);
+        if (lables.length > 300) {
+            lables.shift();
+            phoneX.shift();
+            phoneY.shift();
+            phoneZ.shift();
+            watchX.shift();
+            watchY.shift();
+            watchZ.shift();
+        }
+        chart.update();
+        if (cb)
+            cb();
+    });
+
+    $('form#disconnect').submit(function (event) {
+        socket.emit('disconnect_request');
+        return false;
+    });
+});
+
+const initializeChart = () => {
+    const ctx = document.getElementById('myChart').getContext('2d');
+    document.getElementById('myChart').height = 80;
+    chart = new Chart(ctx, {
+        type: 'line',
+        // The data for the dataset
+        data: {
+            labels: lables,
+            datasets: [{
+                label: 'phone accel x',
+                borderColor: 'rgb(255, 99, 132)',
+                fill: false,
+                data: phoneX
+            },
+                {
+                    label: 'phone accel y',
+                    borderColor: 'rgb(255,152,0)',
+                    fill: false,
+                    data: phoneY
+                },
+                {
+                    label: 'phone accel z',
+                    borderColor: 'rgb(0,166,255)',
+                    fill: false,
+                    data: phoneZ
+                },
+                {
+                    label: 'watch accel x',
+                    borderColor: 'rgb(34,166,179)',
+                    fill: false,
+                    data: watchX
+                },
+                {
+                    label: 'watch accel y',
+                    borderColor: 'rgb(56,103,214)',
+                    fill: false,
+                    data: watchY
+                },
+                {
+                    label: 'watch accel z',
+                    borderColor: 'rgb(75,101,132)',
+                    fill: false,
+                    data: watchZ
+                }]
+        },
+        options: {}
+    });
+}
+
+const sendDeviceData = () => {
+    // Prepare the contextual parameters
+    const phoneAvailability = $('#phoneAvailability').is(":checked");
+    const watchAvailability = $('#watchAvailability').is(":checked");
+
+    const data = [
+        {
+            name: 'watch',
+            isAvailable: watchAvailability,
+        },
+        {
+            name: 'phone',
+            isAvailable: phoneAvailability,
+        }
+    ]
+    socket.emit('device_status', data);
+}
