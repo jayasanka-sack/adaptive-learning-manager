@@ -75,29 +75,30 @@ class HarService:
         # Check if the contextual parameters has been changed
         if collections.Counter(HarService.available_sensors) != collections.Counter(sensors):
             HarService.available_sensors = sensors
-            HarService.analyse(status)
+            HarService.analyse(sensors)
 
     @staticmethod
-    def analyse(status):
+    def analyse(sensors):
         suitable_models = []
         # Choose suitable models by comparing the supported sensor list with the available sensor list
         for model in models:
-            if collections.Counter(model['sensors']) == collections.Counter(HarService.available_sensors):
+            if collections.Counter(model['sensors']) == collections.Counter(sensors):
                 suitable_models.append(model)
-        if len(suitable_models) == 0:
-            HarService.plan(None)
-        else:
-            # Sort models
-            suitable_models.sort(key=HarService.accuracyComparator, reverse=True)
-            HarService.plan(suitable_models[0]['key'])
+        HarService.plan(suitable_models)
 
     @staticmethod
-    def plan(selected_model_key):
+    def plan(suitable_models):
+        selected_model_key = None
+        if len(suitable_models) != 0:
+            # Sort models and pick the best one
+            suitable_models.sort(key=HarService.accuracyComparator, reverse=True)
+            HarService.plan(suitable_models[0]['key'])
         if HarService.current_model_key != selected_model_key:
             HarService.execute(selected_model_key)
 
     @staticmethod
     def execute(selected_model_key):
+        # Switch the model
         HarService.current_model_key = selected_model_key
 
     @staticmethod
