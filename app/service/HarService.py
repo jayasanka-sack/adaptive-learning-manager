@@ -1,8 +1,7 @@
-from tensorflow import keras
 from sklearn import preprocessing
-import numpy as np
 import json
 import collections
+import importlib
 
 LABELS = ['A',
           'B',
@@ -32,11 +31,9 @@ class HarService:
                 'prediction': None,
                 'current_model_key': HarService.current_model_key
             }
-        input_data = HarService.preProcessData(data)
-        encoded_prediction = np.argmax(model_repository[HarService.current_model_key].predict(input_data), axis=1)
-        decoded_prediction = le.inverse_transform(encoded_prediction)[0]
+        # Predict the activity from the model
         return {
-            'prediction': decoded_prediction,
+            'prediction': model_repository[HarService.current_model_key].predict(data),
             'current_model_key': HarService.current_model_key
         }
 
@@ -58,7 +55,7 @@ class HarService:
         with open('../models.json') as file:
             models = json.load(file)
         for model in models:
-            model_repository[model['key']] = keras.models.load_model("../models/" + model['path'])
+            model_repository[model['key']] = importlib.import_module("models." + model['path'])
         print('Successfully loaded the model repository')
 
     @staticmethod
@@ -90,9 +87,9 @@ class HarService:
     def plan(suitable_models):
         selected_model_key = None
         if len(suitable_models) != 0:
-            # Sort models and pick the best one
+            # Sort models
             suitable_models.sort(key=HarService.accuracyComparator, reverse=True)
-            HarService.plan(suitable_models[0]['key'])
+            selected_model_key = suitable_models[0]['key']
         if HarService.current_model_key != selected_model_key:
             HarService.execute(selected_model_key)
 
@@ -104,3 +101,7 @@ class HarService:
     @staticmethod
     def accuracyComparator(model):
         return model['accuracy']
+
+    @staticmethod
+    def powerConsumptionComparator(model):
+        return model['power_consumption']
