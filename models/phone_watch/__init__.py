@@ -8,7 +8,6 @@ LABELS = ['A',
           'C',
           'D',
           'E']
-
 le = preprocessing.LabelEncoder()
 le.fit(LABELS)
 

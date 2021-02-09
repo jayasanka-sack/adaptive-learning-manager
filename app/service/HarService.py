@@ -22,6 +22,7 @@ model_repository = {}
 class HarService:
     available_sensors = []
     current_model_key = None
+    goal = None
 
     # Predict activities using provided sensor data
     @staticmethod
