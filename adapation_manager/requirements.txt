@@ -1,0 +1,6 @@
+Flask==1.1.2
+keras == 2.2.4
+tensorflow
+pandas
+sklearn
+numpy

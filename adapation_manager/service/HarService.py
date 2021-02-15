@@ -1,23 +1,10 @@
-from sklearn import preprocessing
 import json
 import collections
 import importlib
 
-LABELS = ['A',
-          'B',
-          'C',
-          'D',
-          'E']
-
-le = preprocessing.LabelEncoder()
-le.fit(LABELS)
-# Normalization parameters
-normalization_max = 66.615074
-normalization_min = -78.47761
 # Model metadata
 models = None
 model_repository = {}
-
 
 
 class HarService:
@@ -38,16 +25,6 @@ class HarService:
             'prediction': model_repository[HarService.current_model_key].predict(data),
             'current_model_key': HarService.current_model_key
         }
-
-    # Pre process data
-    @staticmethod
-    def preProcessData(data):
-        df = data[HarService.available_sensors]
-        df = (df - normalization_min) / (normalization_max - normalization_min)
-        df = df.round(4)
-        values = df.values
-        input_data = values.reshape(1, values.shape[0] * len(HarService.available_sensors))
-        return input_data
 
     # Load the model repository
     @staticmethod

@@ -9,7 +9,10 @@ python-engineio==4.0.0
 python-socketio==5.0.4
 Werkzeug==1.0.1
 keras == 2.2.4
-tensorflow
-pandas
-sklearn
-numpy
+tensorflow~=2.4.1
+pandas~=1.2.2
+sklearn~=0.0
+numpy~=1.19.5
+
+requests~=2.25.1
+scikit-learn~=0.24.1
