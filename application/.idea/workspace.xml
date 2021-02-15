@@ -2,31 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="7a5a1e17-b925-401e-9744-46ec0eebe71e" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/../adapation_manager/.idea/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../adapation_manager/.idea/adapation_manager.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../adapation_manager/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../adapation_manager/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../adapation_manager/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../adapation_manager/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../adapation_manager/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../adapation_manager/main.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../adapation_manager/models.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../adapation_manager/models/phone/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../adapation_manager/models/phone/model/saved_model.pb" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../adapation_manager/models/phone/model/variables/variables.data-00000-of-00001" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../adapation_manager/models/phone/model/variables/variables.index" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../adapation_manager/models/phone_watch/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../adapation_manager/models/phone_watch/model/saved_model.pb" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../adapation_manager/models/phone_watch/model/variables/variables.data-00000-of-00001" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../adapation_manager/models/phone_watch/model/variables/variables.index" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../adapation_manager/models/watch/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../adapation_manager/models/watch/model/saved_model.pb" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../adapation_manager/models/watch/model/variables/variables.data-00000-of-00001" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../adapation_manager/models/watch/model/variables/variables.index" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../adapation_manager/service/HarService.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/app.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -83,7 +59,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1613377996107</updated>
-      <workItem from="1613377997419" duration="5753000" />
+      <workItem from="1613377997419" duration="6116000" />
     </task>
     <servers />
   </component>
@@ -91,6 +67,6 @@
     <option name="version" value="3" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/application$app.coverage" NAME="app Coverage Results" MODIFIED="1613384334632" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/application$app.coverage" NAME="app Coverage Results" MODIFIED="1613384899373" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>

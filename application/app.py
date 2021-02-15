@@ -4,17 +4,13 @@ from flask import Flask, render_template, request, \
     copy_current_request_context
 from flask_socketio import SocketIO, emit, disconnect
 import pandas as pd
-import logging
 import requests
 
 HAR_MANAGER = "http://localhost:5001"
-log = logging.getLogger('werkzeug')
-log.setLevel(logging.ERROR)
-async_mode = None
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret!'
-socketio = SocketIO(app, async_mode=async_mode)
+socketio = SocketIO(app)
 thread = None
 thread_lock = Lock()
 column_names = ['activity',
