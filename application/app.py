@@ -5,7 +5,10 @@ from flask import Flask, render_template, session, request, \
 from flask_socketio import SocketIO, emit, disconnect
 import pandas as pd
 from service.HarService import HarService
+import logging
 
+log = logging.getLogger('werkzeug')
+log.setLevel(logging.ERROR)
 async_mode = None
 
 app = Flask(__name__)
@@ -23,7 +26,7 @@ column_names = ['activity',
                 'phone-accel-y',
                 'phone-accel-z']
 # Read test data
-df = pd.read_csv('../data_compact.csv', header=None, names=column_names)
+df = pd.read_csv('./data_compact.csv', header=None, names=column_names)
 HarService.loadModels()
 
 

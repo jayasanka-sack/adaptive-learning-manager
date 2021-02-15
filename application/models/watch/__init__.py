@@ -2,7 +2,7 @@ from tensorflow import keras
 from sklearn import preprocessing
 import numpy as np
 
-model = keras.models.load_model('../models/phone/model')
+model = keras.models.load_model('models/watch/model')
 LABELS = ['A',
           'B',
           'C',
@@ -17,7 +17,7 @@ def preProcessData(data):
     # Normalization parameters
     normalization_max = 66.615074
     normalization_min = -78.47761
-    df = data[["phone-accel-x", "phone-accel-y", "phone-accel-z"]]
+    df = data[["watch-accel-x", "watch-accel-y", "watch-accel-z"]]
     df = (df - normalization_min) / (normalization_max - normalization_min)
     df = df.round(4)
     values = df.values

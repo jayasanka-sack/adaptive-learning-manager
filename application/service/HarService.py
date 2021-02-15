@@ -54,7 +54,7 @@ class HarService:
     def loadModels():
         global models
         print('Loading model repository')
-        with open('../models.json') as file:
+        with open('models.json') as file:
             models = json.load(file)
         for model in models:
             model_repository[model['key']] = importlib.import_module("models." + model['path'])
