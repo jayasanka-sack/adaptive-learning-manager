@@ -9,13 +9,32 @@
 <div class="container-flex" style="padding: 50px;">
     <h2>Demonstration</h2>
     <div>
+        <strong>Goal:</strong>
+        <select id="goal">
+            <option value="ACCURACY">Accuracy</option>
+            <option value="ENERGY">Energy Utilization</option>
+        </select>
+        <hr/>
+        <input type="checkbox" id="phoneAvailability" onchange="onPhoneAvailabilityChange()">
         <strong>Phone:</strong><br/>
-        <label for="phoneAvailability">Availability</label>
-        <input type="checkbox" id="phoneAvailability">
-        <br/><br/>
+        <div class="pl-5">
+            <input type="checkbox" id="phone-accel-x">
+            <label for="phoneAvailability">accel-x</label><br/>
+            <input type="checkbox" id="phone-accel-y">
+            <label for="phoneAvailability">accel-y</label><br/>
+            <input type="checkbox" id="phone-accel-z">
+            <label for="phoneAvailability">accel-z</label><br/>
+        </div>
+        <input type="checkbox" id="watchAvailability" onchange="onWatchAvailabilityChange()">
         <strong>Watch:</strong><br/>
-        <label for="watchAvailability">Availability</label>
-        <input type="checkbox" id="watchAvailability">
+        <div class="pl-5">
+            <input type="checkbox" id="watch-accel-x">
+            <label for="phoneAvailability">accel-x</label><br/>
+            <input type="checkbox" id="watch-accel-y">
+            <label for="phoneAvailability">accel-y</label><br/>
+            <input type="checkbox" id="watch-accel-z">
+            <label for="phoneAvailability">accel-z</label><br/>
+        </div>
         <br/>
         <button class="btn btn-warning" onclick="sendDeviceData()">Send</button>
     </div>
@@ -38,7 +57,7 @@
         integrity="sha512-aMGMvNYu8Ue4G+fHa359jcPb1u+ytAF+P2SCb+PxrjCdO3n3ZTxJ30zuH39rimUggmTwmh2u7wvQsDTHESnmfQ=="
         crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
-<script type = "text/javascript"
-         src = "{{ url_for('static', filename = 'index.js') }}" ></script>
+<script type="text/javascript"
+        src="{{ url_for('static', filename = 'index.js') }}"></script>
 <script type="text/javascript" charset="utf-8"></script>
 </html>

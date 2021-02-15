@@ -19,6 +19,7 @@ models = None
 model_repository = {}
 
 
+
 class HarService:
     available_sensors = []
     current_model_key = None
@@ -61,18 +62,18 @@ class HarService:
 
     @staticmethod
     def monitor(status):
-        devices = status
+        devices = status['devices']
+        goal = status['goal']
         sensors = []
         for device in devices:
-            if device['name'] == 'phone':
-                if device['isAvailable']:
-                    sensors.extend(['phone-accel-x', 'phone-accel-y', 'phone-accel-z'])
-            elif device['name'] == 'watch':
-                if device['isAvailable']:
-                    sensors.extend(['watch-accel-x', 'watch-accel-y', 'watch-accel-z'])
+            if device['isAvailable']:
+                for sensor in device['sensors']:
+                    if sensor['isAvailable']:
+                        sensors.append(sensor['name'])
         # Check if the contextual parameters has been changed
-        if collections.Counter(HarService.available_sensors) != collections.Counter(sensors):
+        if HarService.goal != goal or collections.Counter(HarService.available_sensors) != collections.Counter(sensors):
             HarService.available_sensors = sensors
+            HarService.goal = goal
             HarService.analyse(sensors)
 
     @staticmethod
@@ -80,7 +81,7 @@ class HarService:
         suitable_models = []
         # Choose suitable models by comparing the supported sensor list with the available sensor list
         for model in models:
-            if collections.Counter(model['sensors']) == collections.Counter(sensors):
+            if set(model['sensors']).issubset(set(sensors)):
                 suitable_models.append(model)
         HarService.plan(suitable_models)
 
@@ -89,8 +90,12 @@ class HarService:
         selected_model_key = None
         if len(suitable_models) != 0:
             # Sort models
-            suitable_models.sort(key=HarService.accuracyComparator, reverse=True)
-            selected_model_key = suitable_models[0]['key']
+            if HarService.goal == "ACCURACY":
+                suitable_models.sort(key=HarService.accuracyComparator, reverse=True)
+                selected_model_key = suitable_models[0]['key']
+            elif HarService.goal == "ENERGY":
+                suitable_models.sort(key=HarService.energyComparator, reverse=False)
+                selected_model_key = suitable_models[0]['key']
         if HarService.current_model_key != selected_model_key:
             HarService.execute(selected_model_key)
 
@@ -98,11 +103,21 @@ class HarService:
     def execute(selected_model_key):
         # Switch the model
         HarService.current_model_key = selected_model_key
+        # sensors = []
+        # for sensor in HarService.available_sensors:
+        #     data = {
+        #         'sensor': sensor,
+        #         'disabled': sensor in models[selected_model_key].sensors
+        #     }
+        #     sensors.append(data)
+        # app.emit('instructions',
+        #  {'sensors': sensors},
+        #  broadcast=True)
 
     @staticmethod
     def accuracyComparator(model):
         return model['accuracy']
 
     @staticmethod
-    def powerConsumptionComparator(model):
-        return model['power_consumption']
+    def energyComparator(model):
+        return model['energy']

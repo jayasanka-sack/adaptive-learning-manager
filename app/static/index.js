@@ -28,10 +28,18 @@ $(document).ready(function () {
 
     // Update the prediction
     socket.on('prediction', function (msg, cb) {
-        let activity = 'No sensors available'
+        let activity = 'No suitable model available'
         if (msg.data.prediction !== null) {
             activity = activities[msg.data.prediction]
         }
+        $('#currentActivity').text(activity);
+        if (cb)
+            cb();
+    });
+
+    // Update the prediction
+    socket.on('instructions', function (msg, cb) {
+        console.log(msg)
         $('#currentActivity').text(activity);
         if (cb)
             cb();
@@ -123,15 +131,70 @@ const sendDeviceData = () => {
     const phoneAvailability = $('#phoneAvailability').is(":checked");
     const watchAvailability = $('#watchAvailability').is(":checked");
 
-    const data = [
-        {
-            name: 'watch',
-            isAvailable: watchAvailability,
-        },
-        {
-            name: 'phone',
-            isAvailable: phoneAvailability,
-        }
-    ]
+    const data = {
+        goal: $('#goal').val(),
+        devices: [
+            {
+                name: 'watch',
+                isAvailable: watchAvailability,
+                sensors: [
+                    {
+                        name: 'watch-accel-x',
+                        isAvailable: $('#watch-accel-x').is(":checked")
+                    },
+                    {
+                        name: 'watch-accel-y',
+                        isAvailable: $('#watch-accel-y').is(":checked")
+                    },
+                    {
+                        name: 'watch-accel-z',
+                        isAvailable: $('#watch-accel-z').is(":checked")
+                    },
+                ]
+            },
+            {
+                name: 'phone',
+                isAvailable: phoneAvailability,
+                sensors: [
+                    {
+                        name: 'phone-accel-x',
+                        isAvailable: $('#phone-accel-x').is(":checked")
+                    },
+                    {
+                        name: 'phone-accel-y',
+                        isAvailable: $('#phone-accel-y').is(":checked")
+                    },
+                    {
+                        name: 'phone-accel-z',
+                        isAvailable: $('#phone-accel-z').is(":checked")
+                    },
+                ]
+            }
+        ]
+    }
     socket.emit('device_status', data);
+}
+
+const onPhoneAvailabilityChange = () => {
+    if ($('#phoneAvailability').is(":checked")) {
+        $('#phone-accel-x').removeAttr("disabled");
+        $('#phone-accel-y').removeAttr("disabled");
+        $('#phone-accel-z').removeAttr("disabled");
+    } else {
+        $('#phone-accel-x').attr("disabled", true);
+        $('#phone-accel-y').attr("disabled", true);
+        $('#phone-accel-z').attr("disabled", true);
+    }
+}
+
+const onWatchAvailabilityChange = () => {
+    if ($('#watchAvailability').is(":checked")) {
+        $('watch-accel-x').removeAttr("disabled");
+        $('watch-accel-y').removeAttr("disabled");
+        $('watch-accel-z').removeAttr("disabled");
+    } else {
+        $('watch-accel-x').attr("disabled", true);
+        $('watch-accel-y').attr("disabled", true);
+        $('watch-accel-z').attr("disabled", true);
+    }
 }

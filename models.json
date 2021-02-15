@@ -8,6 +8,7 @@
       "phone-accel-z"
     ],
     "accuracy": 68,
+    "energy": 2,
     "path": "phone"
   },
   {
@@ -19,6 +20,7 @@
       "watch-accel-z"
     ],
     "accuracy": 72,
+    "energy": 3,
     "path": "watch"
   },
   {
@@ -33,6 +35,7 @@
       "watch-accel-z"
     ],
     "accuracy": 85,
+    "energy": 5,
     "path": "phone_watch"
   }
 ]
