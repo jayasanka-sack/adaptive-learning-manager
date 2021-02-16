@@ -128,50 +128,59 @@ const initializeChart = () => {
 
 const sendDeviceData = () => {
     // Prepare the contextual parameters
-    const phoneAvailability = $('#phoneAvailability').is(":checked");
-    const watchAvailability = $('#watchAvailability').is(":checked");
-
+    const isPhoneAvailable = $('#phoneAvailability').is(":checked");
+    const isWatchAvailable = $('#watchAvailability').is(":checked");
+    const devices = [
+        {
+            name: 'watch',
+            isAvailable: isWatchAvailable,
+            sensors: [
+                {
+                    name: 'watch-accel-x',
+                    isAvailable: $('#watch-accel-x').is(":checked")
+                },
+                {
+                    name: 'watch-accel-y',
+                    isAvailable: $('#watch-accel-y').is(":checked")
+                },
+                {
+                    name: 'watch-accel-z',
+                    isAvailable: $('#watch-accel-z').is(":checked")
+                },
+            ]
+        },
+        {
+            name: 'phone',
+            isAvailable: isPhoneAvailable,
+            sensors: [
+                {
+                    name: 'phone-accel-x',
+                    isAvailable: $('#phone-accel-x').is(":checked")
+                },
+                {
+                    name: 'phone-accel-y',
+                    isAvailable: $('#phone-accel-y').is(":checked")
+                },
+                {
+                    name: 'phone-accel-z',
+                    isAvailable: $('#phone-accel-z').is(":checked")
+                },
+            ]
+        }
+    ]
     const data = {
         goal: $('#goal').val(),
-        devices: [
-            {
-                name: 'watch',
-                isAvailable: watchAvailability,
-                sensors: [
-                    {
-                        name: 'watch-accel-x',
-                        isAvailable: $('#watch-accel-x').is(":checked")
-                    },
-                    {
-                        name: 'watch-accel-y',
-                        isAvailable: $('#watch-accel-y').is(":checked")
-                    },
-                    {
-                        name: 'watch-accel-z',
-                        isAvailable: $('#watch-accel-z').is(":checked")
-                    },
-                ]
-            },
-            {
-                name: 'phone',
-                isAvailable: phoneAvailability,
-                sensors: [
-                    {
-                        name: 'phone-accel-x',
-                        isAvailable: $('#phone-accel-x').is(":checked")
-                    },
-                    {
-                        name: 'phone-accel-y',
-                        isAvailable: $('#phone-accel-y').is(":checked")
-                    },
-                    {
-                        name: 'phone-accel-z',
-                        isAvailable: $('#phone-accel-z').is(":checked")
-                    },
-                ]
-            }
-        ]
+        sensors: []
     }
+    devices.forEach((device) => {
+        if (device.isAvailable) {
+            device.sensors.forEach((sensor) => {
+                if (sensor.isAvailable) {
+                    data.sensors.push(sensor.name);
+                }
+            })
+        }
+    })
     socket.emit('device_status', data);
 }
 
@@ -189,12 +198,12 @@ const onPhoneAvailabilityChange = () => {
 
 const onWatchAvailabilityChange = () => {
     if ($('#watchAvailability').is(":checked")) {
-        $('watch-accel-x').removeAttr("disabled");
-        $('watch-accel-y').removeAttr("disabled");
-        $('watch-accel-z').removeAttr("disabled");
+        $('#watch-accel-x').removeAttr("disabled");
+        $('#watch-accel-y').removeAttr("disabled");
+        $('#watch-accel-z').removeAttr("disabled");
     } else {
-        $('watch-accel-x').attr("disabled", true);
-        $('watch-accel-y').attr("disabled", true);
-        $('watch-accel-z').attr("disabled", true);
+        $('#watch-accel-x').attr("disabled", true);
+        $('#watch-accel-y').attr("disabled", true);
+        $('#watch-accel-z').attr("disabled", true);
     }
 }

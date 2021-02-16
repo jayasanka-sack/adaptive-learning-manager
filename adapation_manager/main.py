@@ -7,7 +7,8 @@ app = Flask(__name__)
 
 @app.route('/status', methods=['POST'])
 def status():
-    HarService.monitor(request.get_json())
+    return HarService.monitor(request.get_json())
+
 
 @app.route('/predict', methods=['POST'])
 def predict():

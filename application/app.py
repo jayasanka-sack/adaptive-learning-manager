@@ -21,12 +21,9 @@ column_names = ['activity',
                 'phone-accel-x',
                 'phone-accel-y',
                 'phone-accel-z']
+available_sensors = []
 # Read test data
 df = pd.read_csv('./data_compact.csv', header=None, names=column_names)
-
-
-# HarService.loadModels()
-
 
 # Simulation thread
 def background_thread():
@@ -34,16 +31,13 @@ def background_thread():
     size = df.shape[0]
     while True:
         socketio.sleep(0.05)
-        keys = []
+        keys = available_sensors.copy()
         keys.append('timestamp')
         data = df[keys].loc[i].to_frame().T.to_json(orient="records")
         i += 1
         socketio.emit('sensor_data',
                       {'data': data, 'current_model_key': None})
         if i % 200 == 0:
-            # prediction = HarService.predict(df.iloc[(i - 200): i])
-            # socketio.emit('prediction',
-            #               {'data': prediction})
             data = df.iloc[(i - 200): i].to_json()
             predict(data)
         if i == size:
@@ -58,14 +52,19 @@ def index():
 # Event to receive device status
 @socketio.event
 def device_status(message):
+    global available_sensors
     url = HAR_MANAGER + '/status'
     try:
-        response = requests.post(url, json=message)
+        response = requests.post(url, json=message).json()
+        if response['current_status']['model'] is None:
+            available_sensors = []
+        else:
+            available_sensors = response['current_status']['model']['sensors']
+        emit('device_status_response',
+             {'data': response},
+             broadcast=True)
     except requests.exceptions.RequestException as e:
         app.logger.info('Failed to send data')
-    emit('device_status_response',
-         {'data': message},
-         broadcast=True)
 
 
 @socketio.event
@@ -89,7 +88,7 @@ def connect():
     emit('my_response', {'data': 'Connected', 'count': 0})
 
 
-async def predict(data):
+def predict(data):
     url = HAR_MANAGER + '/predict'
     try:
         response = requests.post(url, json=data)
