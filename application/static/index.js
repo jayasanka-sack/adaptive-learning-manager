@@ -28,7 +28,7 @@ $(document).ready(function () {
 
     // Update the prediction
     socket.on('prediction', function (msg, cb) {
-        let activity = 'No suitable model available'
+        let activity = '--'
         if (msg.data.prediction !== null) {
             activity = activities[msg.data.prediction]
         }
@@ -38,9 +38,20 @@ $(document).ready(function () {
     });
 
     // Update the prediction
-    socket.on('instructions', function (msg, cb) {
-        console.log(msg)
-        $('#currentActivity').text(activity);
+    socket.on('device_status_response', function (msg, cb) {
+        const currentStatus = msg.data['current_status'];
+        $('.usage').text('');
+        for (const [key, value] of Object.entries(currentStatus['sensor_data'])) {
+            if(!value.is_enabled){
+                $(`#${key}-usage`).html('<i>(not in use)</i>')
+            }
+        }
+        if(currentStatus['model'] != null){
+            $('#selectedModel').text(currentStatus['model']['name']);
+        }else{
+            $('#selectedModel').text('No suitable model available');
+        }
+
         if (cb)
             cb();
     });
@@ -49,7 +60,6 @@ $(document).ready(function () {
     socket.on('sensor_data', function (msg, cb) {
         const phoneData = JSON.parse(msg.data)[0];
         $('#phoneData').html(JSON.stringify(phoneData));
-        $('#selectedModel').text(msg.current_model_key);
         lables.push(phoneData['timestamp']);
         phoneX.push(phoneData['phone-accel-x']);
         phoneY.push(phoneData['phone-accel-y']);

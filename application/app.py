@@ -21,27 +21,46 @@ column_names = ['activity',
                 'phone-accel-x',
                 'phone-accel-y',
                 'phone-accel-z']
-available_sensors = []
+required_sensors = []
+current_status = {
+    'goal': 'ACCURACY',
+    'sensor_data': {},
+    'model': None
+}
+DEFAULT_FREQUENCY = 20
+frequency = DEFAULT_FREQUENCY
+segment_size = None
 # Read test data
 df = pd.read_csv('./data_compact.csv', header=None, names=column_names)
+counter = 0
+
 
 # Simulation thread
 def background_thread():
+    global counter
     i = 0
     size = df.shape[0]
     while True:
-        socketio.sleep(0.05)
-        keys = available_sensors.copy()
+        socketio.sleep(1 / frequency)
+        keys = required_sensors.copy()
         keys.append('timestamp')
         data = df[keys].loc[i].to_frame().T.to_json(orient="records")
-        i += 1
+        steps = int(DEFAULT_FREQUENCY / frequency)
+        i += steps
+        counter += 1
         socketio.emit('sensor_data',
                       {'data': data, 'current_model_key': None})
-        if i % 200 == 0:
-            data = df.iloc[(i - 200): i].to_json()
-            predict(data)
+        if segment_size is not None:
+            if segment_size == counter:
+                # Get the required range of records
+                data = df.iloc[(i - int(segment_size * steps)): i]
+                # Refine to the correct frequency
+                data = data.iloc[::steps]
+                predict(data.to_json())
+                counter = 0
         if i == size:
             i = 0
+            counter = 0
 
 
 @app.route('/')
@@ -52,14 +71,20 @@ def index():
 # Event to receive device status
 @socketio.event
 def device_status(message):
-    global available_sensors
+    global required_sensors, current_status, frequency, segment_size, counter
     url = HAR_MANAGER + '/status'
     try:
         response = requests.post(url, json=message).json()
-        if response['current_status']['model'] is None:
-            available_sensors = []
+        current_status = response['current_status']
+        if current_status['model'] is None:
+            required_sensors = []
+            frequency = DEFAULT_FREQUENCY
         else:
-            available_sensors = response['current_status']['model']['sensors']
+            required_sensors = current_status['model']['sensors']
+            frequency = current_status['model']['frequency']
+            segment_size = int(frequency * current_status['model']['interval'] / 1000)
+        if response['is_adapted']:
+            counter = 0
         emit('device_status_response',
              {'data': response},
              broadcast=True)

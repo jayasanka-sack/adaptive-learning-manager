@@ -9,6 +9,8 @@
     ],
     "accuracy": 68,
     "energy": 2,
+    "frequency": 20,
+    "interval": 10000,
     "path": "phone"
   },
   {
@@ -21,6 +23,8 @@
     ],
     "accuracy": 72,
     "energy": 3,
+    "frequency": 20,
+    "interval": 10000,
     "path": "watch"
   },
   {
@@ -36,6 +40,22 @@
     ],
     "accuracy": 85,
     "energy": 5,
+    "frequency": 20,
+    "interval": 10000,
     "path": "phone_watch"
+  },
+  {
+    "key": "model-04",
+    "name": "Model-04: Watch Accelerometer @10Hz",
+    "sensors": [
+      "watch-accel-x",
+      "watch-accel-y",
+      "watch-accel-z"
+    ],
+    "accuracy": 68,
+    "energy": 1,
+    "frequency": 10,
+    "interval": 15000,
+    "path": "watch_10hz"
   }
 ]

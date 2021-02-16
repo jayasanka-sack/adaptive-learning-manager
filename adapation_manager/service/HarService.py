@@ -8,7 +8,7 @@ model_repository = {}
 current_status = {
     'goal': 'ACCURACY',
     'sensor_data': {},
-    'model': None
+    'model': None,
 }
 
 
@@ -44,6 +44,11 @@ class HarService:
         goal = status['goal']
         sensors = status['sensors']
         is_adapted = False
+        sensor_data = {}
+        for sensor in sensors:
+            sensor_data[sensor] = {
+                'is_enabled': False
+            }
         # Check if the contextual parameters has been changed
         if current_status['goal'] != goal \
                 or collections.Counter(current_status['sensor_data'].keys()) != collections.Counter(sensors):
@@ -52,14 +57,13 @@ class HarService:
             selected_model = HarService.plan(suitable_models)
             if (bool(current_status['model'] is None) != bool(selected_model is None)) \
                     or (not ((current_status['model'] is None) and (selected_model is None)) and current_status['model']['key'] != selected_model['key']):
-                sensor_data = {}
-                for sensor in sensors:
-                    sensor_data[sensor] = {
-                        'is_enabled': False
-                    }
                 current_status['sensor_data'] = sensor_data
                 HarService.execute(selected_model)
                 is_adapted = True
+        # Mark the enabled sensors
+        if current_status['model'] is not None:
+            for sensor in current_status['model']['sensors']:
+                current_status['sensor_data'][sensor]['is_enabled'] = True
         return {
             'is_adapted': is_adapted,
             'current_status': current_status
@@ -91,9 +95,6 @@ class HarService:
     def execute(selected_model):
         # Switch the model
         current_status['model'] = selected_model
-        # Mark the enabled sensors
-        for sensor in selected_model['sensors']:
-            current_status['sensor_data'][sensor]['is_enabled'] = True
 
     @staticmethod
     def accuracyComparator(model):
