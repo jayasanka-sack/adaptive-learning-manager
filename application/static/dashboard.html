@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>
+        Demo
+    </title>
+    <!--     Fonts and icons     -->
+    <link href="https://fonts.googleapis.com/css?family=Poppins:200,300,400,600,700,800" rel="stylesheet"/>
+    <link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet">
+    <!-- Nucleo Icons -->
+    <link href="/static/css/nucleo-icons.css" rel="stylesheet"/>
+    <!-- CSS Files -->
+    <link href="/static/css/black-dashboard.css?v=1.0.0" rel="stylesheet"/>
+</head>
+
+<body class="">
+<div class="wrapper">
+    <div class="main-panel" data="green">
+        <!-- Navbar -->
+        <nav class="navbar navbar-expand-lg navbar-absolute navbar-transparent">
+            <div class="container-fluid">
+                <div class="navbar-wrapper">
+                    <a class="navbar-brand" href="javascript:void(0)">Dashboard</a>
+                </div>
+                <div class="collapse navbar-collapse" id="navigation">
+                    <ul class="navbar-nav ml-auto">
+                        <li class="search-bar input-group">
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <!-- End Navbar -->
+        <div class="content">
+            <div class="row">
+
+            </div>
+            <div class="row">
+                <div class="col-lg-3">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-category">Configurations</h5>
+                        </div>
+                        <div class="card-body">
+                            <form>
+                                <div class="form-group">
+                                    <label for="goal">Goal</label>
+                                    <select id="goal" class="custom-select">
+                                        <option value="ACCURACY">Accuracy</option>
+                                        <option value="ENERGY">Energy Utilization</option>
+                                    </select>
+                                </div>
+                                <p>Devices</p>
+                                <div class="form-check">
+                                    <label class="form-check-label">
+                                        <input class="form-check-input" type="checkbox" id="phoneAvailability">
+                                        Phone
+                                        <span class="form-check-sign"><span class="check"></span></span>
+                                    </label>
+                                </div>
+                                <div class="pl-5">
+                                    <label>accel-x <span class="usage" id="phone-accel-x-usage"></span></label><br/>
+                                    <label>accel-y <span class="usage" id="phone-accel-y-usage"></span></label><br/>
+                                    <label>accel-z <span class="usage" id="phone-accel-z-usage"></span></label><br/>
+                                </div>
+                                <div class="form-check">
+                                    <label class="form-check-label">
+                                        <input class="form-check-input" type="checkbox" id="watchAvailability">
+                                        Watch
+                                        <span class="form-check-sign"><span class="check"></span></span>
+                                    </label>
+                                </div>
+                                <div class="pl-5">
+                                    <label>accel-x <span class="usage" id="watch-accel-x-usage"></span></label><br/>
+                                    <label>accel-y <span class="usage" id="watch-accel-y-usage"></span></label><br/>
+                                    <label>accel-z <span class="usage" id="watch-accel-z-usage"></span></label><br/>
+                                </div>
+                                <br/>
+                                <button class="btn btn-success" onclick="sendDeviceData()" type="button">Update</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-9">
+                    <div class="row">
+                        <div class="col-lg-4">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="card-category">Current Activity</h5>
+                                    <h3 class="card-title"><i class="tim-icons icon-user-run text-success"></i>
+                                        <span id="currentActivity"> Initializing...</span>
+                                    </h3>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="card-category">Sampling Rate</h5>
+                                    <h3 class="card-title"><i class="tim-icons icon-user-run text-success"></i>
+                                        <span id="frequency">--</span> Hz
+                                    </h3>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="card-category">Power Consumption</h5>
+                                    <h3 class="card-title"><i class="tim-icons icon-user-run text-success"></i>
+                                        <span id="energy">--</span> mAh
+                                    </h3>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-4">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="card-category">Model</h5>
+                                    <h3 class="card-title"><i class="tim-icons icon-app text-success"></i>
+                                        <span id="selectedModel"> Initializing...</span>
+                                    </h3>
+                                </div>
+                                <div class="card-body">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <div class="card card-chart">
+                        <div class="card-header ">
+                            <h5 class="card-category">Sensor Data</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="chart-area">
+                                <canvas id="myChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <footer class="footer">
+            <div class="container-fluid">
+                <ul class="nav">
+                    <li class="nav-item">
+                        <a href="javascript:void(0)" class="nav-link">
+                            W1673724
+                        </a>
+                    </li>
+                </ul>
+                <div class="copyright">
+                    ©
+                    <script>
+                        document.write(new Date().getFullYear())
+                    </script>
+                    2021
+                </div>
+            </div>
+        </footer>
+    </div>
+</div>
+<!--   Core JS Files   -->
+<script src="/static/js/core/jquery.min.js"></script>
+<script src="/static/js/core/popper.min.js"></script>
+<script src="/static/js/core/bootstrap.min.js"></script>
+<script src="/static/js/plugins/perfect-scrollbar.jquery.min.js"></script>
+<!-- Chart JS -->
+<script src="/static/js/plugins/chartjs.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/3.0.4/socket.io.js"
+        integrity="sha512-aMGMvNYu8Ue4G+fHa359jcPb1u+ytAF+P2SCb+PxrjCdO3n3ZTxJ30zuH39rimUggmTwmh2u7wvQsDTHESnmfQ=="
+        crossorigin="anonymous"></script>
+<script src="/static/index.js"></script>
+</body>
+
+</html>

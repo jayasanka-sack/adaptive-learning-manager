@@ -58,7 +58,7 @@ def background_thread():
                 data = data.iloc[::steps]
                 predict(data.to_json())
                 counter = 0
-        if i == size:
+        if i == size - 2:
             i = 0
             counter = 0
 

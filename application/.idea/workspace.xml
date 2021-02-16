@@ -2,14 +2,28 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="7a5a1e17-b925-401e-9744-46ec0eebe71e" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/../adapation_manager/models/watch_10hz/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../adapation_manager/models/watch_10hz/model/saved_model.pb" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/static/css/black-dashboard.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/static/css/black-dashboard.css.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/static/css/black-dashboard.min.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/static/css/nucleo-icons.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/static/dashboard.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/static/fonts/nucleo.eot" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/static/fonts/nucleo.ttf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/static/fonts/nucleo.woff" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/static/fonts/nucleo.woff2" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/static/js/black-dashboard.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/static/js/black-dashboard.js.map" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/static/js/black-dashboard.min.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/static/js/core/bootstrap.min.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/static/js/core/jquery.min.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/static/js/core/popper.min.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/static/js/plugins/bootstrap-notify.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/static/js/plugins/chartjs.min.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/static/js/plugins/perfect-scrollbar.jquery.min.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../adapation_manager/models.json" beforeDir="false" afterPath="$PROJECT_DIR$/../adapation_manager/models.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../adapation_manager/service/HarService.py" beforeDir="false" afterPath="$PROJECT_DIR$/../adapation_manager/service/HarService.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/app.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/static/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/static/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/index.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -30,9 +44,15 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/static" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="restartRequiresConfirmation" value="false" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/static" />
+    </key>
   </component>
   <component name="RunManager">
     <configuration name="app" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
@@ -66,7 +86,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1613377996107</updated>
-      <workItem from="1613377997419" duration="20370000" />
+      <workItem from="1613377997419" duration="25533000" />
     </task>
     <servers />
   </component>
@@ -74,6 +94,6 @@
     <option name="version" value="3" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/application$app.coverage" NAME="app Coverage Results" MODIFIED="1613478691421" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/application$app.coverage" NAME="app Coverage Results" MODIFIED="1613487624849" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>

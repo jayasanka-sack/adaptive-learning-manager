@@ -42,14 +42,18 @@ $(document).ready(function () {
         const currentStatus = msg.data['current_status'];
         $('.usage').text('');
         for (const [key, value] of Object.entries(currentStatus['sensor_data'])) {
-            if(!value.is_enabled){
+            if (!value.is_enabled) {
                 $(`#${key}-usage`).html('<i>(not in use)</i>')
             }
         }
-        if(currentStatus['model'] != null){
+        if (currentStatus['model'] != null) {
             $('#selectedModel').text(currentStatus['model']['name']);
-        }else{
+            $('#energy').text(currentStatus['model']['energy']);
+            $('#frequency').text(currentStatus['model']['frequency']);
+        } else {
             $('#selectedModel').text('No suitable model available');
+            $('#energy').text('--');
+            $('#frequency').text('--');
         }
 
         if (cb)
@@ -146,16 +150,13 @@ const sendDeviceData = () => {
             isAvailable: isWatchAvailable,
             sensors: [
                 {
-                    name: 'watch-accel-x',
-                    isAvailable: $('#watch-accel-x').is(":checked")
+                    name: 'watch-accel-x'
                 },
                 {
-                    name: 'watch-accel-y',
-                    isAvailable: $('#watch-accel-y').is(":checked")
+                    name: 'watch-accel-y'
                 },
                 {
-                    name: 'watch-accel-z',
-                    isAvailable: $('#watch-accel-z').is(":checked")
+                    name: 'watch-accel-z'
                 },
             ]
         },
@@ -164,16 +165,13 @@ const sendDeviceData = () => {
             isAvailable: isPhoneAvailable,
             sensors: [
                 {
-                    name: 'phone-accel-x',
-                    isAvailable: $('#phone-accel-x').is(":checked")
+                    name: 'phone-accel-x'
                 },
                 {
-                    name: 'phone-accel-y',
-                    isAvailable: $('#phone-accel-y').is(":checked")
+                    name: 'phone-accel-y'
                 },
                 {
-                    name: 'phone-accel-z',
-                    isAvailable: $('#phone-accel-z').is(":checked")
+                    name: 'phone-accel-z'
                 },
             ]
         }
@@ -185,35 +183,9 @@ const sendDeviceData = () => {
     devices.forEach((device) => {
         if (device.isAvailable) {
             device.sensors.forEach((sensor) => {
-                if (sensor.isAvailable) {
-                    data.sensors.push(sensor.name);
-                }
+                data.sensors.push(sensor.name);
             })
         }
     })
     socket.emit('device_status', data);
-}
-
-const onPhoneAvailabilityChange = () => {
-    if ($('#phoneAvailability').is(":checked")) {
-        $('#phone-accel-x').removeAttr("disabled");
-        $('#phone-accel-y').removeAttr("disabled");
-        $('#phone-accel-z').removeAttr("disabled");
-    } else {
-        $('#phone-accel-x').attr("disabled", true);
-        $('#phone-accel-y').attr("disabled", true);
-        $('#phone-accel-z').attr("disabled", true);
-    }
-}
-
-const onWatchAvailabilityChange = () => {
-    if ($('#watchAvailability').is(":checked")) {
-        $('#watch-accel-x').removeAttr("disabled");
-        $('#watch-accel-y').removeAttr("disabled");
-        $('#watch-accel-z').removeAttr("disabled");
-    } else {
-        $('#watch-accel-x').attr("disabled", true);
-        $('#watch-accel-y').attr("disabled", true);
-        $('#watch-accel-z').attr("disabled", true);
-    }
 }
