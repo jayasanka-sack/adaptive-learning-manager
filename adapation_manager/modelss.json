@@ -1,6 +1,6 @@
-{
-  "model_01": {
-    "key": "model_01",
+[
+  {
+    "key": "model-01",
     "name": "Phone Accelerometer",
     "sensors": [
       "phone-accel-x",
@@ -13,8 +13,8 @@
     "interval": 10000,
     "path": "phone"
   },
-  "model_02": {
-    "key": "model_02",
+  {
+    "key": "model-02",
     "name": "Watch Accelerometer",
     "sensors": [
       "watch-accel-x",
@@ -27,8 +27,8 @@
     "interval": 10000,
     "path": "watch"
   },
-  "model_03": {
-    "key": "model_03",
+  {
+    "key": "model-03",
     "name": "Phone + Watch Accelerometer",
     "sensors": [
       "phone-accel-x",
@@ -44,8 +44,8 @@
     "interval": 10000,
     "path": "phone_watch"
   },
-  "model_04": {
-    "key": "model_04",
+  {
+    "key": "model-04",
     "name": "Watch Accelerometer @10Hz",
     "sensors": [
       "watch-accel-x",
@@ -58,4 +58,4 @@
     "interval": 15000,
     "path": "watch_10hz"
   }
-}
+]

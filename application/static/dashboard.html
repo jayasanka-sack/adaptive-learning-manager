@@ -84,49 +84,55 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-9">
+                <div class="col-lg-3">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-category">Model</h5>
+                            <h3 class="card-title"><i class="tim-icons icon-app text-success"></i>
+                                <span id="selectedModel"> -- </span>
+                            </h3>
+                        </div>
+                        <div class="card-body">
+                            <p>Key: <span id="model-key">--</span></p>
+                            <p>Sensors</p>
+                            <ul id="sensors">
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3">
                     <div class="row">
-                        <div class="col-lg-4">
+                        <div class="col-lg-12">
                             <div class="card">
                                 <div class="card-header">
                                     <h5 class="card-category">Current Activity</h5>
                                     <h3 class="card-title"><i class="tim-icons icon-user-run text-success"></i>
-                                        <span id="currentActivity"> Initializing...</span>
-                                    </h3>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-4">
-                            <div class="card">
-                                <div class="card-header">
-                                    <h5 class="card-category">Sampling Rate</h5>
-                                    <h3 class="card-title"><i class="tim-icons icon-user-run text-success"></i>
-                                        <span id="frequency">--</span> Hz
-                                    </h3>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-4">
-                            <div class="card">
-                                <div class="card-header">
-                                    <h5 class="card-category">Power Consumption</h5>
-                                    <h3 class="card-title"><i class="tim-icons icon-user-run text-success"></i>
-                                        <span id="energy">--</span> mAh
+                                        <span id="currentActivity"> Waiting for prediction...</span>
                                     </h3>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-lg-4">
+                        <div class="col-lg-12">
                             <div class="card">
                                 <div class="card-header">
-                                    <h5 class="card-category">Model</h5>
-                                    <h3 class="card-title"><i class="tim-icons icon-app text-success"></i>
-                                        <span id="selectedModel"> Initializing...</span>
+                                    <h5 class="card-category">Sampling Rate</h5>
+                                    <h3 class="card-title"><i class="tim-icons icon-sound-wave text-success"></i>
+                                        <span id="frequency">--</span> Hz
                                     </h3>
                                 </div>
-                                <div class="card-body">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="card-category">Power Consumption</h5>
+                                    <h3 class="card-title"><i class="tim-icons icon-button-power text-success"></i>
+                                        <span id="energy">--</span> mAh
+                                    </h3>
                                 </div>
                             </div>
                         </div>

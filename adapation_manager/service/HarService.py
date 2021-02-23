@@ -1,15 +1,21 @@
 import json
 import collections
 import importlib
+from PrologMT import PrologMT
 
+prolog = PrologMT()
+prolog.consult("knowledge_base.pl")
+prolog.assertz("active(watch)")
+prolog.assertz("active(phone)")
 # Model metadata
 models = None
 model_repository = {}
 current_status = {
     'goal': 'ACCURACY',
-    'sensor_data': {},
     'model': None,
+    'devices': []
 }
+registered_devices = ['phone', 'watch']
 
 
 class HarService:
@@ -35,47 +41,50 @@ class HarService:
         print('Loading model repository')
         with open('models.json') as file:
             models = json.load(file)
-        for model in models:
-            model_repository[model['key']] = importlib.import_module("models." + model['path'])
+        for key, meta in models.items():
+            model_repository[key] = importlib.import_module("models." + meta['path'])
         print('Successfully loaded the model repository')
 
     @staticmethod
     def monitor(status):
         goal = status['goal']
-        sensors = status['sensors']
+        devices = status['devices']
+        available_device_list = []
+        for device in devices:
+            if device['isAvailable']:
+                available_device_list.append(device['key'])
+            if bool(list(prolog.query("active("+device['key']+")"))):
+                if not device['isAvailable']:
+                    prolog.retract("active("+device['key']+")")
+            else:
+                if device['isAvailable']:
+                    prolog.assertz("active(" + device['key'] + ")")
         is_adapted = False
-        sensor_data = {}
-        for sensor in sensors:
-            sensor_data[sensor] = {
-                'is_enabled': False
-            }
         # Check if the contextual parameters has been changed
-        if current_status['goal'] != goal \
-                or collections.Counter(current_status['sensor_data'].keys()) != collections.Counter(sensors):
+        if current_status['goal'] != goal or collections.Counter(current_status['devices']) != collections.Counter(available_device_list):
             current_status['goal'] = goal
-            suitable_models = HarService.analyse(sensors)
+            suitable_models = HarService.analyse()
             selected_model = HarService.plan(suitable_models)
             if (bool(current_status['model'] is None) != bool(selected_model is None)) \
                     or (not ((current_status['model'] is None) and (selected_model is None)) and current_status['model']['key'] != selected_model['key']):
-                current_status['sensor_data'] = sensor_data
+                current_status['devices'] = available_device_list
                 HarService.execute(selected_model)
                 is_adapted = True
         # Mark the enabled sensors
-        if current_status['model'] is not None:
-            for sensor in current_status['model']['sensors']:
-                current_status['sensor_data'][sensor]['is_enabled'] = True
+        # if current_status['model'] is not None:
+        #     for sensor in current_status['model']['sensors']:
+        #         current_status['sensor_data'][sensor]['is_enabled'] = True
         return {
             'is_adapted': is_adapted,
             'current_status': current_status
         }
 
     @staticmethod
-    def analyse(sensors):
+    def analyse():
         suitable_models = []
-        # Choose suitable models by comparing the supported sensor list with the available sensor list
-        for model in models:
-            if set(model['sensors']).issubset(set(sensors)):
-                suitable_models.append(model)
+        for soln in prolog.query("suitable(X)"):
+            suitable_models.append(models[soln["X"]])
+            print(soln["X"], "is suitable")
         return suitable_models
 
     @staticmethod

@@ -41,15 +41,21 @@ $(document).ready(function () {
     socket.on('device_status_response', function (msg, cb) {
         const currentStatus = msg.data['current_status'];
         $('.usage').text('');
-        for (const [key, value] of Object.entries(currentStatus['sensor_data'])) {
-            if (!value.is_enabled) {
-                $(`#${key}-usage`).html('<i>(not in use)</i>')
-            }
-        }
+        // for (const [key, value] of Object.entries(currentStatus['sensor_data'])) {
+        //     if (!value.is_enabled) {
+        //         $(`#${key}-usage`).html('<i>(not in use)</i>')
+        //     }
+        // }
         if (currentStatus['model'] != null) {
-            $('#selectedModel').text(currentStatus['model']['name']);
-            $('#energy').text(currentStatus['model']['energy']);
-            $('#frequency').text(currentStatus['model']['frequency']);
+            const model = currentStatus['model']
+            $('#selectedModel').text(model['name']);
+            $('#energy').text(model['energy']);
+            $('#frequency').text(model['frequency']);
+            $('#model-key').text(model['key']);
+            $('#sensors').text('');
+            model.sensors.forEach((sensor) => {
+               $('#sensors').append(`<li>${sensor}</li>`);
+            });
         } else {
             $('#selectedModel').text('No suitable model available');
             $('#energy').text('--');
@@ -146,46 +152,19 @@ const sendDeviceData = () => {
     const isWatchAvailable = $('#watchAvailability').is(":checked");
     const devices = [
         {
-            name: 'watch',
-            isAvailable: isWatchAvailable,
-            sensors: [
-                {
-                    name: 'watch-accel-x'
-                },
-                {
-                    name: 'watch-accel-y'
-                },
-                {
-                    name: 'watch-accel-z'
-                },
-            ]
+            key: 'watch',
+            name: 'Watch',
+            isAvailable: isWatchAvailable
         },
         {
-            name: 'phone',
-            isAvailable: isPhoneAvailable,
-            sensors: [
-                {
-                    name: 'phone-accel-x'
-                },
-                {
-                    name: 'phone-accel-y'
-                },
-                {
-                    name: 'phone-accel-z'
-                },
-            ]
+            key: 'phone',
+            name: 'Phone',
+            isAvailable: isPhoneAvailable
         }
     ]
     const data = {
         goal: $('#goal').val(),
-        sensors: []
+        devices
     }
-    devices.forEach((device) => {
-        if (device.isAvailable) {
-            device.sensors.forEach((sensor) => {
-                data.sensors.push(sensor.name);
-            })
-        }
-    })
     socket.emit('device_status', data);
 }
