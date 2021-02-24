@@ -3,22 +3,8 @@
   <component name="ChangeListManager">
     <list default="true" id="7a5a1e17-b925-401e-9744-46ec0eebe71e" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/../adapation_manager/knowledge_base.pl" beforeDir="false" afterPath="$PROJECT_DIR$/../adapation_manager/knowledge_base.pl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../adapation_manager/models.json" beforeDir="false" afterPath="$PROJECT_DIR$/../adapation_manager/models.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../adapation_manager/models/phone/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/../adapation_manager/models/phone/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../adapation_manager/models/phone_watch/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/../adapation_manager/models/phone_watch/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../adapation_manager/models/watch/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/../adapation_manager/models/watch/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../adapation_manager/models/watch_10hz/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/../adapation_manager/models/watch_10hz/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../adapation_manager/modelss.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../adapation_manager/service/HarService.py" beforeDir="false" afterPath="$PROJECT_DIR$/../adapation_manager/service/HarService.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/app.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models.json" beforeDir="false" afterPath="$PROJECT_DIR$/models.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/phone/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/phone/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/phone_watch/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/phone_watch/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/watch/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/watch/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/static/dashboard.html" beforeDir="false" afterPath="$PROJECT_DIR$/static/dashboard.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/static/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/static/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/index.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -84,12 +70,25 @@
       <workItem from="1613377997419" duration="27160000" />
       <workItem from="1614058057922" duration="3463000" />
       <workItem from="1614069239217" duration="11000" />
-      <workItem from="1614077749823" duration="2917000" />
+      <workItem from="1614077749823" duration="4343000" />
+      <workItem from="1614174885489" duration="20000" />
     </task>
+    <task id="LOCAL-00001" summary="Rename Sensors">
+      <created>1614146414541</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1614146414542</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Rename Sensors" />
+    <option name="LAST_COMMIT_MESSAGE" value="Rename Sensors" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -103,6 +102,6 @@
     </breakpoint-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/application$app.coverage" NAME="app Coverage Results" MODIFIED="1614097922219" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/application$app.coverage" NAME="app Coverage Results" MODIFIED="1614158872492" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>

@@ -60,6 +60,9 @@ $(document).ready(function () {
             $('#selectedModel').text('No suitable model available');
             $('#energy').text('--');
             $('#frequency').text('--');
+            $('#model-key').text('--');
+            $('#sensors').text('');
+            $('#currentActivity').text('--');
         }
 
         if (cb)

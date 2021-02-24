@@ -94,7 +94,7 @@ class HarService:
         suitable_models = []
         for soln in prolog.query("suitable(X)"):
             suitable_models.append(models[soln["X"]])
-            print(soln["X"], "is suitable")
+            # print(soln["X"], "is suitable")
         return suitable_models
 
     @staticmethod
