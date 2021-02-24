@@ -17,7 +17,7 @@ def preProcessData(data):
     # Normalization parameters
     normalization_max = 66.615074
     normalization_min = -78.47761
-    df = data[["phone-accel-x", "phone-accel-y", "phone-accel-z"]]
+    df = data[["phone_accel_x", "phone_accel_y", "phone_accel_z"]]
     df = (df - normalization_min) / (normalization_max - normalization_min)
     df = df.round(4)
     values = df.values

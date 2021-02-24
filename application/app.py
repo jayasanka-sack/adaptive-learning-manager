@@ -15,12 +15,12 @@ thread = None
 thread_lock = Lock()
 column_names = ['activity',
                 'timestamp',
-                'watch-accel-x',
-                'watch-accel-y',
-                'watch-accel-z',
-                'phone-accel-x',
-                'phone-accel-y',
-                'phone-accel-z']
+                'watch_accel_x',
+                'watch_accel_y',
+                'watch_accel_z',
+                'phone_accel_x',
+                'phone_accel_y',
+                'phone_accel_z']
 required_sensors = []
 current_status = {
     'goal': 'ACCURACY',

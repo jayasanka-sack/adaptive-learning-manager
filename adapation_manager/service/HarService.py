@@ -43,6 +43,12 @@ class HarService:
             models = json.load(file)
         for key, meta in models.items():
             model_repository[key] = importlib.import_module("models." + meta['path'])
+            query = "suitable(" + key + ") :-"
+            for i in range(len(meta['sensors'])):
+                query += " usable(" + meta['sensors'][i] + ")"
+                if i < len(meta['sensors']) - 1:
+                    query += ","
+            prolog.assertz(query)
         print('Successfully loaded the model repository')
 
     @staticmethod
@@ -53,20 +59,24 @@ class HarService:
         for device in devices:
             if device['isAvailable']:
                 available_device_list.append(device['key'])
-            if bool(list(prolog.query("active("+device['key']+")"))):
+            if bool(list(prolog.query("active(" + device['key'] + ")"))):
                 if not device['isAvailable']:
-                    prolog.retract("active("+device['key']+")")
+                    prolog.retract("active(" + device['key'] + ")")
             else:
                 if device['isAvailable']:
                     prolog.assertz("active(" + device['key'] + ")")
         is_adapted = False
+
         # Check if the contextual parameters has been changed
-        if current_status['goal'] != goal or collections.Counter(current_status['devices']) != collections.Counter(available_device_list):
+        if current_status['goal'] != goal or collections.Counter(current_status['devices']) != collections.Counter(
+                available_device_list):
             current_status['goal'] = goal
             suitable_models = HarService.analyse()
             selected_model = HarService.plan(suitable_models)
             if (bool(current_status['model'] is None) != bool(selected_model is None)) \
-                    or (not ((current_status['model'] is None) and (selected_model is None)) and current_status['model']['key'] != selected_model['key']):
+                    or (
+                    not ((current_status['model'] is None) and (selected_model is None)) and current_status['model'][
+                'key'] != selected_model['key']):
                 current_status['devices'] = available_device_list
                 HarService.execute(selected_model)
                 is_adapted = True

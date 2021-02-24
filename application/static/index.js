@@ -71,12 +71,12 @@ $(document).ready(function () {
         const phoneData = JSON.parse(msg.data)[0];
         $('#phoneData').html(JSON.stringify(phoneData));
         lables.push(phoneData['timestamp']);
-        phoneX.push(phoneData['phone-accel-x']);
-        phoneY.push(phoneData['phone-accel-y']);
-        phoneZ.push(phoneData['phone-accel-z']);
-        watchX.push(phoneData['watch-accel-x']);
-        watchY.push(phoneData['watch-accel-y']);
-        watchZ.push(phoneData['watch-accel-z']);
+        phoneX.push(phoneData['phone_accel_x']);
+        phoneY.push(phoneData['phone_accel_y']);
+        phoneZ.push(phoneData['phone_accel_z']);
+        watchX.push(phoneData['watch_accel_x']);
+        watchY.push(phoneData['watch_accel_y']);
+        watchZ.push(phoneData['watch_accel_z']);
         if (lables.length > 300) {
             lables.shift();
             phoneX.shift();
