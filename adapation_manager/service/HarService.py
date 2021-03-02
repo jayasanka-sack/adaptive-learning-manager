@@ -9,7 +9,7 @@ prolog.assertz("enabled(phone)")
 prolog.assertz("battery(phone, 100)")
 prolog.assertz("battery(watch, 100)")
 prolog.assertz("active(phone) :- enabled(phone), battery(phone, B), B > 0")
-prolog.assertz("active(watch) :- enabled(watch), battery(watch, B), B > 90")
+prolog.assertz("active(watch) :- enabled(watch), battery(watch, B), B > 0")
 # Model metadata
 models = None
 model_repository = {}
@@ -63,12 +63,14 @@ class HarService:
         available_device_list = []
         prolog.retractall("enabled(D)")
         prolog.retractall("battery(D,P)")
-        # prolog.retractall("active(D) :- enabled(D), battery(D, B), B > P")
+        prolog.retractall("active(D)")
         for device in devices:
             if device['isAvailable']:
                 available_device_list.append(device['key'])
                 prolog.assertz("enabled(" + device['key'] + ")")
                 prolog.assertz("battery(" + device['key'] + "," + str(device['battery']) + ")")
+                prolog.assertz("active(" + device['key'] + ") :- enabled(" + device['key'] + "), battery(" +
+                               device['key'] + ", B), B >" + device['min_battery'])
         is_adapted = False
 
         # Check if the contextual parameters has been changed

@@ -85,15 +85,14 @@ def background_thread():
         for device in devices:
             if set(required_sensors) & set(device['sensors']):
                 status = current_device_status[device['name']]
-                if status['battery'] > 0:
-                    calculated_battery = status['battery'] - (1 / frequency) * \
-                                         current_status['model']['energy'] / 3600 / device['capacity']
-                    if abs(int(status['battery']) - int(calculated_battery)) > 0 and previous_device_status != {}:
-                        send_device_status(previous_device_status)
-                    if calculated_battery > 0:
-                        status['battery'] = calculated_battery
-                    else:
-                        status['battery'] = 0
+                calculated_battery = status['battery'] - (1 / frequency) * current_status['model']['energy'] / 3600 / \
+                                     device['capacity']
+                if abs(int(status['battery']) - int(calculated_battery)) > 0 and previous_device_status != {}:
+                    send_device_status(previous_device_status)
+                if calculated_battery > 0:
+                    status['battery'] = calculated_battery
+                else:
+                    status['battery'] = 0
         socketio.emit('sensor_data', {
             'data': data,
             'device_status': json.dumps(current_device_status)
@@ -182,8 +181,8 @@ def send_device_status(status):
         if response['is_adapted']:
             counter = 0
         socketio.emit('device_status_response',
-             {'data': response},
-             broadcast=True)
+                      {'data': response},
+                      broadcast=True)
     except requests.exceptions.RequestException as e:
         app.logger.info('Failed to send data')
 

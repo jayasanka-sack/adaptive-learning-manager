@@ -52,6 +52,7 @@ $(document).ready(function () {
             $('#energy').text(model['energy']);
             $('#frequency').text(model['frequency']);
             $('#model-key').text(model['key']);
+            $('#model-accuracy').text(model['accuracy']);
             $('#sensors').text('');
             model.sensors.forEach((sensor) => {
                $('#sensors').append(`<li>${sensor}</li>`);
@@ -61,6 +62,7 @@ $(document).ready(function () {
             $('#energy').text('--');
             $('#frequency').text('--');
             $('#model-key').text('--');
+            $('#model-accuracy').text('--');
             $('#sensors').text('');
             $('#currentActivity').text('--');
         }
@@ -159,12 +161,14 @@ const sendDeviceData = () => {
         {
             key: 'watch',
             name: 'Watch',
-            isAvailable: isWatchAvailable
+            isAvailable: isWatchAvailable,
+            min_battery: $('#watch-min-battery').val()
         },
         {
             key: 'phone',
             name: 'Phone',
-            isAvailable: isPhoneAvailable
+            isAvailable: isPhoneAvailable,
+            min_battery: $('#phone-min-battery').val()
         }
     ]
     const data = {

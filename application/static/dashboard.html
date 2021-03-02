@@ -53,32 +53,18 @@
                                         <option value="ENERGY">Energy Utilization</option>
                                     </select>
                                 </div>
-                                <p>Devices</p>
-                                <div class="form-check">
-                                    <label class="form-check-label">
-                                        <input class="form-check-input" type="checkbox" id="phoneAvailability">
-                                        Phone
-                                        <span class="form-check-sign"><span class="check"></span></span>
-                                    </label>
-                                </div>
-                                <div class="pl-5">
-                                    <label>accel-x <span class="usage" id="phone_accel_x-usage"></span></label><br/>
-                                    <label>accel-y <span class="usage" id="phone_accel_y-usage"></span></label><br/>
-                                    <label>accel-z <span class="usage" id="phone_accel_z-usage"></span></label><br/>
-                                </div>
-                                <div class="form-check">
-                                    <label class="form-check-label">
-                                        <input class="form-check-input" type="checkbox" id="watchAvailability">
-                                        Watch
-                                        <span class="form-check-sign"><span class="check"></span></span>
-                                    </label>
-                                </div>
-                                <div class="pl-5">
-                                    <label>accel-x <span class="usage" id="watch_accel_x-usage"></span></label><br/>
-                                    <label>accel-y <span class="usage" id="watch_accel_y-usage"></span></label><br/>
-                                    <label>accel-z <span class="usage" id="watch_accel_z-usage"></span></label><br/>
-                                </div>
                                 <br/>
+                                <label>Custom rules</label>
+                                <div class="form-group">
+                                    <p>Don't use my phone if the battery is less than</p>
+                                    <input id="phone-min-battery" style="width: 100px" type="number" class="form-control form-control-sm"
+                                           value="0">
+                                </div>
+                                <div class="form-group">
+                                    <p>Don't use my watch if the battery is less than</p>
+                                    <input id="watch-min-battery" style="width: 100px" type="number" class="form-control form-control-sm"
+                                           value="0">
+                                </div>
                                 <button class="btn btn-success" onclick="sendDeviceData()" type="button">Update</button>
                             </form>
                         </div>
@@ -88,17 +74,17 @@
                     <div class="row">
                         <div class="col-12">
                             <div class="card">
-                                <div class="card-header">
-                                    <h3 class="card-title">Phone</h3>
-                                </div>
-                                <div class="form-check">
-                                    <label class="form-check-label">
-                                        <input class="form-check-input" type="checkbox" id="phoneAvailability">
-                                        Device is enabled
-                                        <span class="form-check-sign"><span class="check"></span></span>
-                                    </label>
-                                </div>
                                 <div class="card-body">
+                                    <h3 class="card-title">Phone</h3>
+                                    <div class="form-check">
+                                        <label class="form-check-label">
+                                            <input class="form-check-input" type="checkbox" id="phoneAvailability"
+                                                   onchange="sendDeviceData()">
+                                            Device is enabled
+                                            <span class="form-check-sign"><span class="check"></span></span>
+                                        </label>
+                                    </div>
+                                    <br/>
                                     <p>Battery : <span id="phone_battery">-</span>%</p>
                                 </div>
                             </div>
@@ -107,10 +93,17 @@
                     <div class="row">
                         <div class="col-12">
                             <div class="card">
-                                <div class="card-header">
-                                    <h3 class="card-title">Watch</h3>
-                                </div>
                                 <div class="card-body">
+                                    <h3 class="card-title">Watch</h3>
+                                    <div class="form-check">
+                                        <label class="form-check-label">
+                                            Device is enabled
+                                            <input class="form-check-input" type="checkbox" id="watchAvailability"
+                                                   onchange="sendDeviceData()">
+                                            <span class="form-check-sign"><span class="check"></span></span>
+                                        </label>
+                                    </div>
+                                    <br/>
                                     <p>Battery : <span id="watch_battery">-</span>%</p>
                                 </div>
                             </div>
@@ -127,6 +120,7 @@
                         </div>
                         <div class="card-body">
                             <p>Key: <span id="model-key">--</span></p>
+                            <p>Accuracy: <span id="model-accuracy">--</span>%</p>
                             <p>Sensors</p>
                             <ul id="sensors">
                             </ul>
