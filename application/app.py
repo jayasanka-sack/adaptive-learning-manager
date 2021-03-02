@@ -5,6 +5,7 @@ from flask import Flask, render_template, request, \
 from flask_socketio import SocketIO, emit, disconnect
 import pandas as pd
 import requests
+import json
 
 HAR_MANAGER = "http://localhost:5001"
 
@@ -25,14 +26,46 @@ required_sensors = []
 current_status = {
     'goal': 'ACCURACY',
     'sensor_data': {},
-    'model': None
+    'model': None,
+    'devices': []
 }
+devices = [
+    {
+        'name': 'phone',
+        'sensors': [
+            'phone_accel_x',
+            'phone_accel_y',
+            'phone_accel_z'
+        ],
+        'battery': 100,
+        'capacity': 0.01
+    },
+    {
+        'name': 'watch',
+        'sensors': [
+            'watch_accel_x',
+            'watch_accel_y',
+            'watch_accel_z',
+        ],
+        'battery': 100,
+        'capacity': 0.005
+    }
+]
+
 DEFAULT_FREQUENCY = 20
 frequency = DEFAULT_FREQUENCY
 segment_size = None
 # Read test data
 df = pd.read_csv('./data_compact.csv', header=None, names=column_names)
 counter = 0
+current_device_status = {
+    'phone': {
+        'battery': 100
+    },
+    'watch': {
+        'battery': 100
+    }
+}
 
 
 # Simulation thread
@@ -48,8 +81,18 @@ def background_thread():
         steps = int(DEFAULT_FREQUENCY / frequency)
         i += steps
         counter += 1
-        socketio.emit('sensor_data',
-                      {'data': data, 'current_model_key': None})
+        for device in devices:
+            if set(required_sensors) & set(device['sensors']):
+                calculated_battery = current_device_status[device['name']]['battery'] - (1 / frequency) * \
+                                     current_status['model']['energy'] / 3600 / device['capacity']
+                if device['battery'] - calculated_battery > 0:
+                    current_device_status[device['name']]['battery'] = calculated_battery
+                else:
+                    current_device_status[device['name']]['battery'] = 0
+        socketio.emit('sensor_data', {
+            'data': data,
+            'device_status': json.dumps(current_device_status)
+        })
         if segment_size is not None:
             if segment_size == counter:
                 # Get the required range of records

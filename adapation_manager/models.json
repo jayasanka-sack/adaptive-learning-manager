@@ -8,8 +8,8 @@
       "phone_accel_z"
     ],
     "accuracy": 68,
-    "energy": 2,
-    "frequency": 20,
+    "energy": 20,
+    "frequency": 200,
     "interval": 10000,
     "path": "phone"
   },
@@ -22,7 +22,7 @@
       "watch_accel_z"
     ],
     "accuracy": 72,
-    "energy": 3,
+    "energy": 300,
     "frequency": 20,
     "interval": 10000,
     "path": "watch"
@@ -39,7 +39,7 @@
       "watch_accel_z"
     ],
     "accuracy": 85,
-    "energy": 5,
+    "energy": 500,
     "frequency": 20,
     "interval": 10000,
     "path": "phone_watch"
@@ -53,7 +53,7 @@
       "watch_accel_z"
     ],
     "accuracy": 68,
-    "energy": 1,
+    "energy": 100,
     "frequency": 10,
     "interval": 15000,
     "path": "watch_10hz"
