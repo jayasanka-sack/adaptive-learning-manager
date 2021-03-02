@@ -71,15 +71,14 @@ $(document).ready(function () {
 
     // Display Sensor data on the graph
     socket.on('sensor_data', function (msg, cb) {
-        const phoneData = JSON.parse(msg.data)[0];
-        $('#phoneData').html(JSON.stringify(phoneData));
-        lables.push(phoneData['timestamp']);
-        phoneX.push(phoneData['phone_accel_x']);
-        phoneY.push(phoneData['phone_accel_y']);
-        phoneZ.push(phoneData['phone_accel_z']);
-        watchX.push(phoneData['watch_accel_x']);
-        watchY.push(phoneData['watch_accel_y']);
-        watchZ.push(phoneData['watch_accel_z']);
+        const data = JSON.parse(msg.data)[0];
+        lables.push(data['timestamp']);
+        phoneX.push(data['phone_accel_x']);
+        phoneY.push(data['phone_accel_y']);
+        phoneZ.push(data['phone_accel_z']);
+        watchX.push(data['watch_accel_x']);
+        watchY.push(data['watch_accel_y']);
+        watchZ.push(data['watch_accel_z']);
         if (lables.length > 300) {
             lables.shift();
             phoneX.shift();
@@ -90,6 +89,9 @@ $(document).ready(function () {
             watchZ.shift();
         }
         chart.update();
+        const device_status = JSON.parse(msg.device_status);
+        $('#phone_battery').text(device_status.phone.battery.toFixed(1));
+        $('#watch_battery').text(device_status.watch.battery.toFixed(1));
         if (cb)
             cb();
     });

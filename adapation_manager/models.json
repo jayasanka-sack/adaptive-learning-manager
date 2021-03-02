@@ -8,8 +8,8 @@
       "phone_accel_z"
     ],
     "accuracy": 68,
-    "energy": 20,
-    "frequency": 200,
+    "energy": 200,
+    "frequency": 20,
     "interval": 10000,
     "path": "phone"
   },

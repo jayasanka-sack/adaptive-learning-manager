@@ -1,12 +1,15 @@
 import json
-import collections
 import importlib
 from PrologMT import PrologMT
 
 prolog = PrologMT()
 prolog.consult("knowledge_base.pl")
-prolog.assertz("active(watch)")
-prolog.assertz("active(phone)")
+prolog.assertz("enabled(watch)")
+prolog.assertz("enabled(phone)")
+prolog.assertz("battery(phone, 100)")
+prolog.assertz("battery(watch, 100)")
+prolog.assertz("active(phone) :- enabled(phone), battery(phone, B), B > 0")
+prolog.assertz("active(watch) :- enabled(watch), battery(watch, B), B > 90")
 # Model metadata
 models = None
 model_repository = {}
@@ -16,6 +19,7 @@ current_status = {
     'devices': []
 }
 registered_devices = ['phone', 'watch']
+previous_status = {}
 
 
 class HarService:
@@ -53,23 +57,22 @@ class HarService:
 
     @staticmethod
     def monitor(status):
+        global previous_status
         goal = status['goal']
         devices = status['devices']
         available_device_list = []
+        prolog.retractall("enabled(D)")
+        prolog.retractall("battery(D,P)")
+        # prolog.retractall("active(D) :- enabled(D), battery(D, B), B > P")
         for device in devices:
             if device['isAvailable']:
                 available_device_list.append(device['key'])
-            if bool(list(prolog.query("active(" + device['key'] + ")"))):
-                if not device['isAvailable']:
-                    prolog.retract("active(" + device['key'] + ")")
-            else:
-                if device['isAvailable']:
-                    prolog.assertz("active(" + device['key'] + ")")
+                prolog.assertz("enabled(" + device['key'] + ")")
+                prolog.assertz("battery(" + device['key'] + "," + str(device['battery']) + ")")
         is_adapted = False
 
         # Check if the contextual parameters has been changed
-        if current_status['goal'] != goal or collections.Counter(current_status['devices']) != collections.Counter(
-                available_device_list):
+        if status != previous_status:
             current_status['goal'] = goal
             suitable_models = HarService.analyse()
             selected_model = HarService.plan(suitable_models)
@@ -84,6 +87,7 @@ class HarService:
         # if current_status['model'] is not None:
         #     for sensor in current_status['model']['sensors']:
         #         current_status['sensor_data'][sensor]['is_enabled'] = True
+        previous_status = status
         return {
             'is_adapted': is_adapted,
             'current_status': current_status

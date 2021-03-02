@@ -38,7 +38,7 @@ devices = [
             'phone_accel_z'
         ],
         'battery': 100,
-        'capacity': 0.01
+        'capacity': 0.1
     },
     {
         'name': 'watch',
@@ -48,7 +48,7 @@ devices = [
             'watch_accel_z',
         ],
         'battery': 100,
-        'capacity': 0.005
+        'capacity': 0.1
     }
 ]
 
@@ -66,6 +66,7 @@ current_device_status = {
         'battery': 100
     }
 }
+previous_device_status = {}
 
 
 # Simulation thread
@@ -83,12 +84,16 @@ def background_thread():
         counter += 1
         for device in devices:
             if set(required_sensors) & set(device['sensors']):
-                calculated_battery = current_device_status[device['name']]['battery'] - (1 / frequency) * \
-                                     current_status['model']['energy'] / 3600 / device['capacity']
-                if device['battery'] - calculated_battery > 0:
-                    current_device_status[device['name']]['battery'] = calculated_battery
-                else:
-                    current_device_status[device['name']]['battery'] = 0
+                status = current_device_status[device['name']]
+                if status['battery'] > 0:
+                    calculated_battery = status['battery'] - (1 / frequency) * \
+                                         current_status['model']['energy'] / 3600 / device['capacity']
+                    if abs(int(status['battery']) - int(calculated_battery)) > 0 and previous_device_status != {}:
+                        send_device_status(previous_device_status)
+                    if calculated_battery > 0:
+                        status['battery'] = calculated_battery
+                    else:
+                        status['battery'] = 0
         socketio.emit('sensor_data', {
             'data': data,
             'device_status': json.dumps(current_device_status)
@@ -114,25 +119,7 @@ def index():
 # Event to receive device status
 @socketio.event
 def device_status(message):
-    global required_sensors, current_status, frequency, segment_size, counter
-    url = HAR_MANAGER + '/status'
-    try:
-        response = requests.post(url, json=message).json()
-        current_status = response['current_status']
-        if current_status['model'] is None:
-            required_sensors = []
-            frequency = DEFAULT_FREQUENCY
-        else:
-            required_sensors = current_status['model']['sensors']
-            frequency = current_status['model']['frequency']
-            segment_size = int(frequency * current_status['model']['interval'] / 1000)
-        if response['is_adapted']:
-            counter = 0
-        emit('device_status_response',
-             {'data': response},
-             broadcast=True)
-    except requests.exceptions.RequestException as e:
-        app.logger.info('Failed to send data')
+    send_device_status(message)
 
 
 @socketio.event
@@ -174,6 +161,31 @@ def predict(data):
 @socketio.on('disconnect')
 def test_disconnect():
     print('Client disconnected', request.sid)
+
+
+def send_device_status(status):
+    global required_sensors, current_status, frequency, segment_size, counter, previous_device_status
+    url = HAR_MANAGER + '/status'
+    for device in status['devices']:
+        device['battery'] = current_device_status[device['key']]['battery']
+    try:
+        previous_device_status = status
+        response = requests.post(url, json=status).json()
+        current_status = response['current_status']
+        if current_status['model'] is None:
+            required_sensors = []
+            frequency = DEFAULT_FREQUENCY
+        else:
+            required_sensors = current_status['model']['sensors']
+            frequency = current_status['model']['frequency']
+            segment_size = int(frequency * current_status['model']['interval'] / 1000)
+        if response['is_adapted']:
+            counter = 0
+        socketio.emit('device_status_response',
+             {'data': response},
+             broadcast=True)
+    except requests.exceptions.RequestException as e:
+        app.logger.info('Failed to send data')
 
 
 if __name__ == '__main__':
