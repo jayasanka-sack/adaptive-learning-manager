@@ -38,7 +38,7 @@ devices = [
             'phone_accel_z'
         ],
         'battery': 100,
-        'capacity': 0.1
+        'capacity': 0.5
     },
     {
         'name': 'watch',
@@ -140,6 +140,11 @@ def connect():
         if thread is None:
             thread = socketio.start_background_task(background_thread)
     emit('my_response', {'data': 'Connected', 'count': 0})
+
+
+@socketio.event
+def recharge_device(device):
+    current_device_status[device]['battery'] = 100
 
 
 def predict(data):

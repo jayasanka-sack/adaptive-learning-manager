@@ -57,12 +57,14 @@
                                 <label>Custom rules</label>
                                 <div class="form-group">
                                     <p>Don't use my phone if the battery is less than</p>
-                                    <input id="phone-min-battery" style="width: 100px" type="number" class="form-control form-control-sm"
+                                    <input id="phone-min-battery" style="width: 100px" type="number"
+                                           class="form-control form-control-sm"
                                            value="0">
                                 </div>
                                 <div class="form-group">
                                     <p>Don't use my watch if the battery is less than</p>
-                                    <input id="watch-min-battery" style="width: 100px" type="number" class="form-control form-control-sm"
+                                    <input id="watch-min-battery" style="width: 100px" type="number"
+                                           class="form-control form-control-sm"
                                            value="0">
                                 </div>
                                 <button class="btn btn-success" onclick="sendDeviceData()" type="button">Update</button>
@@ -85,7 +87,11 @@
                                         </label>
                                     </div>
                                     <br/>
-                                    <p>Battery : <span id="phone_battery">-</span>%</p>
+                                    <p>Battery : <span id="phone_battery">-</span>%
+                                    <button class="btn btn-sm" onclick="rechargeDevice('phone')">
+                                            <i class="tim-icons icon-refresh-01"></i>
+                                        </button>
+                                    </p>
                                 </div>
                             </div>
                         </div>
@@ -104,7 +110,12 @@
                                         </label>
                                     </div>
                                     <br/>
-                                    <p>Battery : <span id="watch_battery">-</span>%</p>
+                                    <p>
+                                        Battery : <span id="watch_battery">-</span>%
+                                        <button class="btn btn-sm" onclick="rechargeDevice('watch')">
+                                            <i class="tim-icons icon-refresh-01"></i>
+                                        </button>
+                                    </p>
                                 </div>
                             </div>
                         </div>
@@ -120,7 +131,7 @@
                         </div>
                         <div class="card-body">
                             <p>Key: <span id="model-key">--</span></p>
-                            <p>Accuracy: <span id="model-accuracy">--</span>%</p>
+                            <p>Accuracy: </p>
                             <p>Sensors</p>
                             <ul id="sensors">
                             </ul>
@@ -156,6 +167,18 @@
                         <div class="col-lg-12">
                             <div class="card">
                                 <div class="card-header">
+                                    <h5 class="card-category">Accuracy</h5>
+                                    <h3 class="card-title"><i class="tim-icons icon-check-2 text-success"></i>
+                                        <span id="model-accuracy">--</span>%
+                                    </h3>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="card">
+                                <div class="card-header">
                                     <h5 class="card-category">Power Consumption</h5>
                                     <h3 class="card-title"><i class="tim-icons icon-button-power text-success"></i>
                                         <span id="energy">--</span> mAh
@@ -174,7 +197,21 @@
                         </div>
                         <div class="card-body">
                             <div class="chart-area">
-                                <canvas id="myChart"></canvas>
+                                <canvas id="chart-sensor-data"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <div class="card card-chart">
+                        <div class="card-header ">
+                            <h5 class="card-category">Battery Levels</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="chart-area">
+                                <canvas id="chart-battery-data"></canvas>
                             </div>
                         </div>
                     </div>

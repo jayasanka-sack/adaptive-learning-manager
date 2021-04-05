@@ -6,7 +6,10 @@ let watchX = [];
 let watchY = [];
 let watchZ = [];
 let lables = [];
+let phoneBattery = [];
+let watchBattery = [];
 let chart;
+let batteryChart;
 const activities = {
     "A": "walking",
     "B": "jogging",
@@ -16,7 +19,8 @@ const activities = {
 }
 
 $(document).ready(function () {
-    initializeChart();
+    initializeSensorChart();
+    initializeBatteryChart();
     // Connect to the Socket.IO server.
     socket = io();
 
@@ -55,7 +59,7 @@ $(document).ready(function () {
             $('#model-accuracy').text(model['accuracy']);
             $('#sensors').text('');
             model.sensors.forEach((sensor) => {
-               $('#sensors').append(`<li>${sensor}</li>`);
+                $('#sensors').append(`<li>${sensor}</li>`);
             });
         } else {
             $('#selectedModel').text('No suitable model available');
@@ -74,6 +78,9 @@ $(document).ready(function () {
     // Display Sensor data on the graph
     socket.on('sensor_data', function (msg, cb) {
         const data = JSON.parse(msg.data)[0];
+        const device_status = JSON.parse(msg.device_status);
+        $('#phone_battery').text(device_status.phone.battery.toFixed(1));
+        $('#watch_battery').text(device_status.watch.battery.toFixed(1));
         lables.push(data['timestamp']);
         phoneX.push(data['phone_accel_x']);
         phoneY.push(data['phone_accel_y']);
@@ -81,6 +88,8 @@ $(document).ready(function () {
         watchX.push(data['watch_accel_x']);
         watchY.push(data['watch_accel_y']);
         watchZ.push(data['watch_accel_z']);
+        phoneBattery.push(device_status.phone.battery);
+        watchBattery.push(device_status.watch.battery);
         if (lables.length > 300) {
             lables.shift();
             phoneX.shift();
@@ -89,11 +98,11 @@ $(document).ready(function () {
             watchX.shift();
             watchY.shift();
             watchZ.shift();
+            phoneBattery.shift();
+            watchBattery.shift();
         }
         chart.update();
-        const device_status = JSON.parse(msg.device_status);
-        $('#phone_battery').text(device_status.phone.battery.toFixed(1));
-        $('#watch_battery').text(device_status.watch.battery.toFixed(1));
+        batteryChart.update();
         if (cb)
             cb();
     });
@@ -104,9 +113,9 @@ $(document).ready(function () {
     });
 });
 
-const initializeChart = () => {
-    const ctx = document.getElementById('myChart').getContext('2d');
-    document.getElementById('myChart').height = 80;
+const initializeSensorChart = () => {
+    const ctx = document.getElementById('chart-sensor-data').getContext('2d');
+    document.getElementById('chart-sensor-data').height = 80;
     chart = new Chart(ctx, {
         type: 'line',
         // The data for the dataset
@@ -153,6 +162,48 @@ const initializeChart = () => {
     });
 }
 
+
+const initializeBatteryChart = () => {
+    const ctx = document.getElementById('chart-battery-data').getContext('2d');
+    document.getElementById('chart-battery-data').height = 80;
+    batteryChart = new Chart(ctx, {
+        type: 'line',
+        // The data for the dataset
+        data: {
+            labels: lables,
+            datasets: [
+                {
+                    label: 'Phone',
+                    borderColor: 'rgb(0,166,255)',
+                    fill: false,
+                    data: phoneBattery
+                },
+                {
+                    label: 'Watch',
+                    borderColor: 'rgb(255,152,0)',
+                    fill: false,
+                    data: watchBattery
+                }]
+        },
+        options: {
+            bezierCurve: true,
+            elements: {
+                point: {
+                    radius: 0
+                }
+            },
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        suggestedMin: 0,
+                        suggestedMax: 100
+                    }
+                }]
+            }
+        }
+    });
+}
+
 const sendDeviceData = () => {
     // Prepare the contextual parameters
     const isPhoneAvailable = $('#phoneAvailability').is(":checked");
@@ -176,4 +227,8 @@ const sendDeviceData = () => {
         devices
     }
     socket.emit('device_status', data);
+}
+
+const rechargeDevice = (device) => {
+    socket.emit('recharge_device', device);
 }
