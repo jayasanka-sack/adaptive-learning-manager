@@ -1,4 +1,8 @@
-FROM python:3.7.3-stretch
+FROM ubuntu:latest
+
+RUN apt-get update -y
+RUN apt-get install -y python3
+RUN apt install -y python3-pip
 
 #RUN apt update && \
 #apt install --no-install-recommends -y build-essential gcc curl      ca-certificates python3 && \
@@ -12,6 +16,6 @@ RUN pip3 install -r requirements.txt
 
 COPY . /app
 
-ENTRYPOINT [ "python" ]
+ENTRYPOINT [ "python3" ]
 
 CMD ["main.py"]
