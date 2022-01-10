@@ -7,7 +7,7 @@ import pandas as pd
 import requests
 import json
 
-HAR_MANAGER = "http://localhost:5001"
+HAR_MANAGER = "http://alf:5001"
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret!'

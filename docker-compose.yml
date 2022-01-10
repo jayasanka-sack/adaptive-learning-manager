@@ -1,0 +1,10 @@
+services:
+  alf:
+    build: ./adapation_manager
+    ports:
+      - "5001:5001"
+    platform: linux/x86_64
+  alf_client:
+    build: ./application
+    ports:
+      - "8000:8000"
