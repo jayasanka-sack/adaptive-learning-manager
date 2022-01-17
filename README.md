@@ -10,7 +10,7 @@ Follow [this guide](https://docs.docker.com/get-docker/) to install docker.
 2. Run containers* 
     In a terminal, execute: `docker-compose up`
 3. Visit http://localhost:8000/static/dashboard.html from your browser.
-4. Try changin the context by enabling devices, change goals, or change battery rules. The model configuration will change according to the provided context.
+4. Try changing the context by enabling devices, change goals, or change battery rules. The model configuration will change according to the provided context.
 
 **\*Currently, the alf docker image does not support Apple M1 devices.**
 
