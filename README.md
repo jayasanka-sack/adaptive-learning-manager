@@ -8,7 +8,7 @@ From activity recognition to object tracking and language processing, there has 
 1. Install docker
 
     Follow [this guide](https://docs.docker.com/get-docker/) to install docker.
-    
+
 2. Run containers* 
 
     In a terminal, execute: `docker-compose up`
@@ -20,14 +20,14 @@ From activity recognition to object tracking and language processing, there has 
 
 **![](https://lh4.googleusercontent.com/iWctPg3bUjAo4aJqF2GJnGezpTzqjBMXRWKR3v_D0YEqC1SkE9HwGlaOqFwhBjLqngBogOEyC76xEKtbyYCTSRP-6CLNJFrUkAna-FnjT5wvIHUxMTn_irhWJmaBEMio6OjRIf4_)**
 
-## Deploy a new model
-The model repository is a crucial component of the Adaptive Learning Manager. The model repository is implemented as physical file storage. Each model should be deployed as a specific directory and present in the `/adapation_manager/models` directory. 
+## Deploy a new model configuration
+The model repository is a crucial component of the Adaptive Learning Manager. It is implemented as physical file storage. Each model configuration should be deployed as a specific directory and present in the `/adapation_manager/models` directory. 
 
 ### 1. Copy the `model` directory to the models repository 
 
 The structure of the model directory is defined as follows:
 
-The Directory should be named with the model key. The model file should contain the exported model files. The exported model is independent of the training technique or the way of exporting. You can use your own technologies. In the current implementation, we used Keras to train the models. There should be a python script named `__init__.py`. The script should contain relevant codes to load the model. This script will be executed when the system starts.
+The Directory should be named with the model configuration key. The model directory should contain the exported model files. You can use your own technologies to train and export and you can use multiple models in a single model configuration. In the current implementation, we used Keras to train the models. There should be a python script named `__init__.py`. The script should contain relevant codes to load the model. This script will be executed when the system starts.
 
 There should be a mandatory function named `predict` which accepts a pandas data frame with relevant sensor data. The function should return a string that is the label of the predicted activity. The activity labels are as follows:
 ```
@@ -45,15 +45,15 @@ You have the freedom to write any code within the prediction method. As an examp
 
 Copy the directory to [`/adapation_manager/models`](https://github.com/jayasanka-sack/adaptive-learning-manager/tree/main/adapation_manager/models) directory. 
 
-### 2. Update the `models.json` file with model metadata
+### 2. Update the `models.json` file with model configuration metadata
 
-Whenever a you deploy a new model, the `adaptation_manager/models.json` file in the root of the adaptation_manager also should be updated with model metadata.
+Whenever a you deploy a new model configuration, the `adaptation_manager/models.json` file in the root of the adaptation_manager also should be updated with model metadata.
 
-This is a sample metadata for a model:
+This is a sample metadata for a model configuration:
 ```json
 {
-"model_01": {
-    "key": "model_01",
+"model_config_01": {
+    "key": "model_config_01",
     "name": "Phone Accelerometer",
     "sensors": [
       "phone_accel_x",
@@ -71,8 +71,8 @@ This is a sample metadata for a model:
 The keys are defined as below:
 | Key       | Type          |  Description| 
 |--|--|--|
-|key        | `string`      | The key of the model |
-|name       |`string`       |Name of the model|
+|key        | `string`      | The key of the model configuration |
+|name       |`string`       |Name of the model configuration|
 |Sensors    |`string[]`     |Array of sensor keys|
 | Accuracy  |`float `       |Accuracy in test data|
 | Energy    | `float`       |Calculated power consumption in mAh|
