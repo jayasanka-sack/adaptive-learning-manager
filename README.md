@@ -1,6 +1,8 @@
 
 # Adaptive Learning for resilient Activity Recognition
 
+From activity recognition to object tracking and language processing, there has been an explosive growth in the use of machine learning (ML) to train models capable of translating data into meaningful information. Software systems that use these models to provide core functionality need to take into account their capabilities and performance characteristics, which depend on different contextual factors such as the available input data types, the specificity of data used to train the ML models, and computing resource constraints. This can be achieved by using an adaptive architecture in ML-based software systems. Building on prior research for self-adaptation for ML-based systems, this repo presents a reference architecture implementation for an Adaptive Learning Framework (ALF). 
+
 ## Quick start
 
 1. Install docker
