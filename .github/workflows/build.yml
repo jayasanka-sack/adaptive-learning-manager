@@ -1,0 +1,24 @@
+# This is the work flow to generate preview links for Pull Requests
+name: Test adaptive_learning_manager
+on:
+  pull_request:
+  push:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./adaptive_learning_manager
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+      - name: Installing dependencies
+        run: pip install -r requirements.txt
+      - name: Run tests
+        run: |
+          python -m unittest tests/AdaptationManagerTest.py
+          python -m unittest tests/PredictionServiceTest.py
+

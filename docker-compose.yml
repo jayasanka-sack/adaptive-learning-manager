@@ -1,6 +1,6 @@
 services:
   alf:
-    build: ./adapation_manager
+    build: ./adaptive_learning_manager
     ports:
       - "5001:5001"
   alf_client:
