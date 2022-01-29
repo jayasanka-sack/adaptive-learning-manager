@@ -80,7 +80,7 @@ The required keys are defined as below:
 |key        | `string`      | The key of the model configuration    |
 |name       |`string`       |Name of the model configuration        |
 |inputs     |`string[]`     |Array of input keys                    |
-|path       |`string`       |Path to the modules                    |
+|path       |`string`       |Path to the config module                    |
 
 You can add your own custom keys that are being used when choosing the most suitable model depending on the goal.  
 
