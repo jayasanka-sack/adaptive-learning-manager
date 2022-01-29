@@ -1,7 +1,0 @@
-tensorflow==2.5.2
-Flask==1.1.2
-Keras==2.2.4
-numpy==1.21.0
-pandas==1.2.2
-pyswip==0.2.10
-scikit-learn==0.24.1
