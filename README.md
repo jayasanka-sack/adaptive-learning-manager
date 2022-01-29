@@ -49,54 +49,44 @@ There should be a mandatory function named `predict` which accepts a pandas data
 ```
 However, these labels are also independent of the system. You can use your own labels, the labels should be reflected in the end application.
 
-Use [this example script](https://github.com/jayasanka-sack/adaptive-learning-manager/blob/main/adapation_manager/models/phone/__init__.py) as a reference.
+Use [this example script](https://github.com/jayasanka-sack/adaptive-learning-manager/blob/main/adapative_learning_manager/models/phone/__init__.py) as a reference.
 
 You have the freedom to write any code within the prediction method. As an example, [this example script](https://github.com/jayasanka-sack/adaptive-learning-manager/blob/main/adapation_manager/models/phone/__init__.py)  has defined an extra method to pre-process the data. Moreover, you can write the prediction function to predict using more than one model.
 
-Copy the directory to [`/adapation_manager/models`](https://github.com/jayasanka-sack/adaptive-learning-manager/tree/main/adapation_manager/models) directory. 
+Copy the directory to [`/adapative_learning_manager/models`](https://github.com/jayasanka-sack/adaptive-learning-manager/tree/main/adapative_learning_manager/models) directory. 
 
-### 2. Update the `models.json` file with model configuration metadata
+### 2. Update the `model_config.json` file with model configuration metadata
 
-Whenever a you deploy a new model configuration, the `adaptation_manager/models.json` file in the root of the adaptation_manager also should be updated with model metadata.
+Whenever a you deploy a new model configuration, the `adapative_learning_manager/model_config.json` file in the root of the adaptation_manager also should be updated with model metadata.
 
 This is a sample metadata for a model configuration:
 ```json
 {
-"model_config_01": {
     "key": "model_config_01",
-    "name": "Phone Accelerometer",
-    "sensors": [
-      "phone_accel_x",
-      "phone_accel_y",
-      "phone_accel_z"
+    "name": "Model Config 01",
+    "inputs": [
+      "input_a",
+      "input_b",
+      "input_c"
     ],
-    "accuracy": 68,
-    "energy": 200,
-    "frequency": 20,
-    "interval": 10000,
-    "path": "phone"
-  }
-}  
+    "path": "models.config_01",
+    ...
+}
 ```
-The keys are defined as below:
+The required keys are defined as below:
 | Key       | Type          |  Description| 
 |--|--|--|
-|key        | `string`      | The key of the model configuration |
-|name       |`string`       |Name of the model configuration|
-|Sensors    |`string[]`     |Array of sensor keys|
-| Accuracy  |`float `       |Accuracy in test data|
-| Energy    | `float`       |Calculated power consumption in mAh|
-| frequency |`int`          |Data frequency|
-|interval   |`int`          |Number of milliseconds in an interval|
-|path       |`string`       |Relative path to the model directory from the root.|
+|key        | `string`      | The key of the model configuration    |
+|name       |`string`       |Name of the model configuration        |
+|inputs     |`string[]`     |Array of input keys                    |
+|path       |`string`       |Path to the modules                    |
 
+You can add your own metadata that are being used when choosing the most suitable model depending on the goal.  
 
-_The model metadata will be loaded into the knowledge component when the application starts. The metadata from the models.json file will be read and stored in a global variable as part of the knowledge component. Then it will load each model script as modules and store in a dictionary named model_repository. So, the predict method of a model can be accessible via:
-`model_repository[“key”].predict()`_
 
 ## Configuring simulator data
 
-The simulator data is stored at `/application/data_compact.csv` file. You can replace the simulator data with the following column order:
+The simulator data is stored at `/example/data_compact.csv` file. You can replace the simulator data with the following column order:
 
 
 1.  `activity label`
@@ -112,28 +102,16 @@ The simulator data is stored at `/application/data_compact.csv` file. You can re
 ## Integrating different client applications
 Given that the provided client is an example, you can integrate ALF with your own applications. The provided two REST API endpoints can be used to communicate with ALF.
 
-1. POST /monitor
+1. POST /context
     The first endpoint is to send contextual parameters from the application.
 The request contains the current device data, user goals. The data will be redirected to Adaptive Learning Manager from the controller.
 Sample request:
     ```json
     {
         "goal":"ACCURACY",
-        "devices":[
-          {
-             "key":"watch",
-             "name":"Watch",
-             "isAvailable":true,
-             "battery":45,
-             "min_battery":20
-          },
-          {
-             "key":"phone",
-             "name":"Phone",
-             "isAvailable":true,
-             "battery":70,
-             "min_battery":15
-          }
+        "inputs":[
+          "input_a",
+          "input_b"
         ]
     }
     ```
@@ -141,20 +119,15 @@ Sample request:
     Sample response:
     ```json
     {
-        "model_config_02":{
-           "key":"model_config_02",
-           "name":"Watch Accelerometer",
-           "sensors":[
-              "watch_accel_x",
-              "watch_accel_y",
-              "watch_accel_z"
-           ],
-           "accuracy":72,
-           "energy":300,
-           "frequency":20,
-           "interval":10000,
-           "path":"watch"
-        }
+        "key": "model_config_01",
+        "name": "Model Config 01",
+        "inputs": [
+          "input_a",
+          "input_b",
+          "input_c"
+        ],
+        "path": "models.config_01"
+        ...
     }
     ```
 2. POST /predict 
@@ -162,9 +135,9 @@ Sample request:
         Sample request: 
     ```json
     "columns": [
-        "watch_accel_x",
-        "watch_accel_y",
-        "watch_accel_z"
+        "input_a",
+        "input_b",
+        "input_c"
     ],
     "data": [
         [
@@ -180,13 +153,13 @@ Sample request:
         "prediction": "A"
     }
     ```
+
+## Adding new goals
+
+Edit the [https://github.com/jayasanka-sack/adaptive-learning-manager/blob/main/adapative_learning_manager/goals/__init__.py](/goals/__init__.py) file to add a new goal. You should write your own logic to pick the best model config from a provided set of configs.
+
+
     
 ## Registering new inputs
-
-To add a new input add relavent rules to the [/adapation_manager/knowledge_base.pl](https://github.com/jayasanka-sack/adaptive-learning-manager/blob/152716a6db741940d21abb26dcfc4ff52b868cae/adapation_manager/knowledge_base.pl) file to specify when the input is `usable`. 
-
-ex: `The phone_accel_x` is available when the `phone` is active is denoted by:
-`usable(phone_accel_x) :- active(phone).`
-
-Currently the availability of the inputs determined by the availability of the devices  (i.e. group of sensors). Therefore, the input should be falled under one or more devices. To register a device add it to the `registered_devices` variable in the [/adapation_manager/service/HarService.py](https://github.com/jayasanka-sack/adaptive-learning-manager/blob/152716a6db741940d21abb26dcfc4ff52b868cae/adapation_manager/service/HarService.py#L18) file. Also add dynamic prolog facts to the same file and other rules to the  `knowledge_base.pl` file. 
+Update the `model_config.json` file with new inputs.
 
