@@ -70,7 +70,8 @@ This is a sample metadata for a model configuration:
       "input_c"
     ],
     "path": "models.config_01",
-    ...
+    "custom_key_1": "custom_value_1",
+    "custom_key_2": "custom_value_2"
 }
 ```
 The required keys are defined as below:
@@ -81,7 +82,7 @@ The required keys are defined as below:
 |inputs     |`string[]`     |Array of input keys                    |
 |path       |`string`       |Path to the modules                    |
 
-You can add your own metadata that are being used when choosing the most suitable model depending on the goal.  
+You can add your own custom keys that are being used when choosing the most suitable model depending on the goal.  
 
 
 ## Configuring simulator data
@@ -126,8 +127,9 @@ Sample request:
           "input_b",
           "input_c"
         ],
-        "path": "models.config_01"
-        ...
+        "path": "models.config_01",
+        "custom_key_1": "custom_value_1",
+        "custom_key_2": "custom_value_2"
     }
     ```
 2. POST /predict 
