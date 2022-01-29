@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./adaptive_learning_manager
+        working-directory: adaptive_learning_manager
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
