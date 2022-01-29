@@ -14,8 +14,6 @@ test_modal_configs = [
         ],
         'accuracy': 90,
         'energy': 10,
-        'frequency': 20,
-        'interval': 10000,
         'path': 'tests.TestModelConfig'
     },
     {
@@ -28,8 +26,6 @@ test_modal_configs = [
         ],
         'accuracy': 80,
         'energy': 20,
-        'frequency': 20,
-        'interval': 10000,
         'path': 'tests.TestModelConfig'
     },
     {
@@ -40,8 +36,6 @@ test_modal_configs = [
         ],
         'accuracy': 60,
         'energy': 5,
-        'frequency': 20,
-        'interval': 10000,
         'path': 'tests.TestModelConfig'
     }
 ]
