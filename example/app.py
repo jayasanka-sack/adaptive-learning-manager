@@ -7,7 +7,7 @@ import pandas as pd
 import requests
 import json
 
-HAR_MANAGER = "http://localhost:5001"
+ALF = "http://alf:5001"
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret!'
@@ -153,7 +153,7 @@ def recharge_device(device):
 
 
 def predict(data):
-    url = HAR_MANAGER + '/predict'
+    url = ALF + '/predict'
     try:
         response = requests.post(url, json=data)
         socketio.emit('prediction',
@@ -173,7 +173,7 @@ def test_disconnect():
 
 def send_current_context():
     global required_sensors, current_status, frequency, segment_size, counter
-    url = HAR_MANAGER + '/context'
+    url = ALF + '/context'
     context = {
         'goal': current_status['goal'],
         'inputs': []
