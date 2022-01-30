@@ -23,7 +23,7 @@ THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR I
 
     In a terminal, execute: `docker-compose up`
 
-3. Visit http://localhost:8000/static/dashboard.html from your browser.
+3. Visit http://localhost:8000 from your browser.
 4. Try changing the context by enabling devices, change goals, or change battery rules. The model configuration will change according to the provided context.
 
 **\*Currently, the alf docker image does not support Apple M1 devices.**
