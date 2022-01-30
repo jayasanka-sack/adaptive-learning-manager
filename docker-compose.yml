@@ -4,7 +4,7 @@ services:
     ports:
       - "5001:5001"
   alf_client:
-    build: ./application
+    build: ./example
     ports:
       - "8000:8000"
     depends_on:
