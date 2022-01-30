@@ -1,63 +1,253 @@
-<!DOCTYPE HTML>
-<html>
+<!DOCTYPE html>
+<html lang="en">
+
 <head>
-    <title>Flask-SocketIO Test</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
-          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>
+        Demo
+    </title>
+    <!--     Fonts and icons     -->
+    <link href="https://fonts.googleapis.com/css?family=Poppins:200,300,400,600,700,800" rel="stylesheet"/>
+    <link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet">
+    <!-- Nucleo Icons -->
+    <link href="./css/nucleo-icons.css" rel="stylesheet"/>
+    <!-- CSS Files -->
+    <link href="./css/black-dashboard.css?v=1.0.0" rel="stylesheet"/>
 </head>
-<body>
-<div class="container-flex" style="padding: 50px;">
-    <h2>Demonstration</h2>
-    <div>
-        <strong>Goal:</strong>
-        <select id="goal">
-            <option value="ACCURACY">Accuracy</option>
-            <option value="ENERGY">Energy Utilization</option>
-        </select>
-        <hr/>
-        <input type="checkbox" id="phoneAvailability" onchange="onPhoneAvailabilityChange()">
-        <strong>Phone:</strong><br/>
-        <div class="pl-5">
-            <input type="checkbox" id="phone_accel_x">
-            <label>accel-x <span class="usage" id="phone_accel_x-usage"></span></label><br/>
-            <input type="checkbox" id="phone_accel_y">
-            <label>accel-y </label><span class="usage" id="phone_accel_y-usage"></span><br/>
-            <input type="checkbox" id="phone_accel_z">
-            <label>accel-z <span class="usage" id="phone_accel_z-usage"></span></label><br/>
+
+<body class="">
+<div class="wrapper">
+    <div class="main-panel" data="green">
+        <!-- Navbar -->
+        <nav class="navbar navbar-expand-lg navbar-absolute navbar-transparent">
+            <div class="container-fluid">
+                <div class="navbar-wrapper">
+                    <a class="navbar-brand" href="javascript:void(0)">Dashboard</a>
+                </div>
+                <div class="collapse navbar-collapse" id="navigation">
+                    <ul class="navbar-nav ml-auto">
+                        <li class="search-bar input-group">
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <!-- End Navbar -->
+        <div class="content">
+            <div class="row">
+
+            </div>
+            <div class="row">
+                <div class="col-lg-3">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-category">Configurations</h5>
+                        </div>
+                        <div class="card-body">
+                            <form>
+                                <div class="form-group">
+                                    <label for="goal">Goal</label>
+                                    <select id="goal" class="custom-select">
+                                        <option value="ACCURACY">Accuracy</option>
+                                        <option value="ENERGY">Energy Utilization</option>
+                                    </select>
+                                </div>
+                                <br/>
+                                <label>Custom rules</label>
+                                <div class="form-group">
+                                    <p>Don't use my phone if the battery is less than</p>
+                                    <input id="phone-min-battery" style="width: 100px" type="number"
+                                           class="form-control form-control-sm"
+                                           value="0">
+                                </div>
+                                <div class="form-group">
+                                    <p>Don't use my watch if the battery is less than</p>
+                                    <input id="watch-min-battery" style="width: 100px" type="number"
+                                           class="form-control form-control-sm"
+                                           value="0">
+                                </div>
+                                <button class="btn btn-success" onclick="sendDeviceData()" type="button">Update</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h3 class="card-title">Phone</h3>
+                                    <div class="form-check">
+                                        <label class="form-check-label">
+                                            <input class="form-check-input" type="checkbox" id="phoneAvailability"
+                                                   onchange="sendDeviceData()">
+                                            enable
+                                            <span class="form-check-sign"><span class="check"></span></span>
+                                        </label>
+                                    </div>
+                                    <br/>
+                                    <p>Battery : <span id="phone_battery">-</span>%
+                                        <button class="btn btn-sm" onclick="rechargeDevice('phone')">
+                                            <i class="tim-icons icon-refresh-01"></i>
+                                        </button>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h3 class="card-title">Watch</h3>
+                                    <div class="form-check">
+                                        <label class="form-check-label">
+                                            enable
+                                            <input class="form-check-input" type="checkbox" id="watchAvailability"
+                                                   onchange="sendDeviceData()">
+                                            <span class="form-check-sign"><span class="check"></span></span>
+                                        </label>
+                                    </div>
+                                    <br/>
+                                    <p>
+                                        Battery : <span id="watch_battery">-</span>%
+                                        <button class="btn btn-sm" onclick="rechargeDevice('watch')">
+                                            <i class="tim-icons icon-refresh-01"></i>
+                                        </button>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-category">Current Model Config</h5>
+                            <h3 class="card-title"><i class="tim-icons icon-app text-success"></i>
+                                <span id="selectedModel"> -- </span>
+                            </h3>
+                        </div>
+                        <div class="card-body">
+                            <p>Key: <span id="model-key">--</span></p>
+                            <p>Sensors</p>
+                            <ul id="sensors">
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="card-category">Current Activity</h5>
+                                    <h3 class="card-title"><i class="tim-icons icon-user-run text-success"></i>
+                                        <span id="currentActivity"> Waiting for prediction...</span>
+                                    </h3>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="card-category">Sampling Rate</h5>
+                                    <h3 class="card-title"><i class="tim-icons icon-sound-wave text-success"></i>
+                                        <span id="frequency">--</span> Hz
+                                    </h3>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="card-category">Accuracy</h5>
+                                    <h3 class="card-title"><i class="tim-icons icon-check-2 text-success"></i>
+                                        <span id="model-accuracy">--</span>%
+                                    </h3>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="card-category">Power Consumption</h5>
+                                    <h3 class="card-title"><i class="tim-icons icon-button-power text-success"></i>
+                                        <span id="energy">--</span> mAh
+                                    </h3>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <div class="card card-chart">
+                        <div class="card-header ">
+                            <h5 class="card-category">Sensor Data</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="chart-area">
+                                <canvas id="chart-sensor-data"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <div class="card card-chart">
+                        <div class="card-header ">
+                            <h5 class="card-category">Battery Levels</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="chart-area">
+                                <canvas id="chart-battery-data"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-        <input type="checkbox" id="watchAvailability" onchange="onWatchAvailabilityChange()">
-        <strong>Watch:</strong><br/>
-        <div class="pl-5">
-            <input type="checkbox" id="watch_accel_x">
-            <label>accel-x <span class="usage" id="watch_accel_x-usage"></span></label><br/>
-            <input type="checkbox" id="watch_accel_y">
-            <label>accel-y <span class="usage" id="watch_accel_y-usage"></span></label><br/>
-            <input type="checkbox" id="watch_accel_z">
-            <label>accel-z <span class="usage" id="watch_accel_z-usage"></span></label><br/>
-        </div>
-        <br/>
-        <button class="btn btn-warning" onclick="sendDeviceData()">Send</button>
+        <footer class="footer">
+            <div class="container-fluid">
+                <ul class="nav">
+                    <li class="nav-item">
+                        <a href="javascript:void(0)" class="nav-link">
+                            W1673724
+                        </a>
+                    </li>
+                </ul>
+                <div class="copyright">
+                    ©
+                    <script>
+                        document.write(new Date().getFullYear())
+                    </script>
+                    2021
+                </div>
+            </div>
+        </footer>
     </div>
-    <hr/>
-    <form id="disconnect" method="POST" action="#">
-        <input class="btn btn-sm btn-danger" type="submit" value="Disconnect">
-    </form>
-    <div id="log"></div>
-    <div id="deviceStatus"></div>
-    <div id="phoneData"></div>
-    <h2>Current Activity: <span id="currentActivity"></span></h2>
-    <h2>Selected Model: <span id="selectedModel"></span></h2>
-    <canvas id="myChart" height="200"></canvas>
 </div>
-</body>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"
-        integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg=="
-        crossorigin="anonymous"></script>
+<!--   Core JS Files   -->
+<script src="./js/core/jquery.min.js"></script>
+<script src="./js/core/popper.min.js"></script>
+<script src="./js/core/bootstrap.min.js"></script>
+<script src="./js/plugins/perfect-scrollbar.jquery.min.js"></script>
+<!-- Chart JS -->
+<script src="./js/plugins/chartjs.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/3.0.4/socket.io.js"
         integrity="sha512-aMGMvNYu8Ue4G+fHa359jcPb1u+ytAF+P2SCb+PxrjCdO3n3ZTxJ30zuH39rimUggmTwmh2u7wvQsDTHESnmfQ=="
         crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
-<script type="text/javascript"
-        src="{{ url_for('static', filename = 'index.js') }}"></script>
-<script type="text/javascript" charset="utf-8"></script>
+<script src="./index.js"></script>
+</body>
+
 </html>

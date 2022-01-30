@@ -9,7 +9,7 @@ import json
 
 ALF = "http://alf:5001"
 
-app = Flask(__name__)
+app = Flask(__name__, static_url_path='')
 app.config['SECRET_KEY'] = 'secret!'
 socketio = SocketIO(app)
 thread = None

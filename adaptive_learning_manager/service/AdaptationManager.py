@@ -61,6 +61,8 @@ class AdaptationManager:
     def plan(self, suitable_configs):
         if len(suitable_configs) == 0:
             return None
+        elif len(suitable_configs) == 1:
+            return suitable_configs[0]
         else:
             return goals.pick_best_config(suitable_configs, self.current_context['goal'])
 

@@ -28,7 +28,7 @@ THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR I
 
 **\*Currently, the alf docker image does not support Apple M1 devices.**
 
-**![](https://lh4.googleusercontent.com/iWctPg3bUjAo4aJqF2GJnGezpTzqjBMXRWKR3v_D0YEqC1SkE9HwGlaOqFwhBjLqngBogOEyC76xEKtbyYCTSRP-6CLNJFrUkAna-FnjT5wvIHUxMTn_irhWJmaBEMio6OjRIf4_)**
+**![](https://i.ibb.co/q5n0h3V/client-screenshot.png)**
 
 ## Deploy a new model configuration
 The model repository is a crucial component of the Adaptive Learning Manager. It is implemented as physical file storage. Each model configuration should be deployed as a specific directory and present in the `/adapation_manager/models` directory. 
@@ -49,15 +49,15 @@ There should be a mandatory function named `predict` which accepts a pandas data
 ```
 However, these labels are also independent of the system. You can use your own labels, the labels should be reflected in the end application.
 
-Use [this example script](https://github.com/jayasanka-sack/adaptive-learning-manager/blob/main/adapative_learning_manager/models/phone/__init__.py) as a reference.
+Use [this example script](https://github.com/jayasanka-sack/adaptive-learning-manager/blob/main/adaptive_learning_manager/models/phone/__init__.py) as a reference.
 
 You have the freedom to write any code within the prediction method. As an example, [this example script](https://github.com/jayasanka-sack/adaptive-learning-manager/blob/main/adapation_manager/models/phone/__init__.py)  has defined an extra method to pre-process the data. Moreover, you can write the prediction function to predict using more than one model.
 
-Copy the directory to [`/adapative_learning_manager/models`](https://github.com/jayasanka-sack/adaptive-learning-manager/tree/main/adapative_learning_manager/models) directory. 
+Copy the directory to [`/adaptive_learning_manager/models`](https://github.com/jayasanka-sack/adaptive-learning-manager/tree/main/adaptive_learning_manager/models) directory. 
 
 ### 2. Update the `model_config.json` file with model configuration metadata
 
-Whenever a you deploy a new model configuration, the `adapative_learning_manager/model_config.json` file in the root of the adaptation_manager also should be updated with model metadata.
+Whenever a you deploy a new model configuration, the `adaptive_learning_manager/model_config.json` file in the root of the adaptation_manager also should be updated with model metadata.
 
 This is a sample metadata for a model configuration:
 ```json
@@ -161,7 +161,7 @@ Sample request:
 
 ## Adding new goals
 
-Edit the [https://github.com/jayasanka-sack/adaptive-learning-manager/blob/main/adapative_learning_manager/goals/__init__.py](/goals/__init__.py) file to add a new goal. You should write your own logic to pick the best model config from a provided set of configs.
+Edit the [https://github.com/jayasanka-sack/adaptive-learning-manager/blob/main/adaptive_learning_manager/goals/__init__.py](/goals/__init__.py) file to add a new goal. You should write your own logic to pick the best model config from a provided set of configs.
 
 
     
