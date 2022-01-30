@@ -87,7 +87,7 @@ You can add your own custom keys that are being used when choosing the most suit
 
 ## Configuring simulator data
 
-The simulator data is stored at `/example/data_compact.csv` file. You can replace the simulator data with the following column order:
+The simulator data is stored at `/example/simulator_data.csv` file. You can replace the simulator data with the following column order:
 
 
 1.  `activity label`
@@ -146,7 +146,7 @@ Sample request:
     ],
     "data": [
         [
-            "7.931840400000001",
+            "7.931840400",
             "-1.0452187",
             "-2.2301989"
         ],

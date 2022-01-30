@@ -59,7 +59,7 @@ DEFAULT_FREQUENCY = 20
 frequency = DEFAULT_FREQUENCY
 segment_size = None
 # Read test data
-df = pd.read_csv('./data_compact.csv', header=None, names=column_names)
+df = pd.read_csv('./simulator_data.csv', header=None, names=column_names)
 counter = 0
 
 
