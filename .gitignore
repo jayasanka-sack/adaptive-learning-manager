@@ -2,3 +2,5 @@ __pycache__/
 *.py[cod]
 *$py.class
 service/__pycache__/
+.idea
+**/.DS_Store
