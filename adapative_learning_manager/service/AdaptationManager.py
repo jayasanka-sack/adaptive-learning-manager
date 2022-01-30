@@ -74,7 +74,10 @@ class AdaptationManager:
 
     def get_current_model_config(self):
         key = self.prediction_service.get_config_key()
-        for config in self.model_configs:
-            if config['key'] == key:
-                return config
+        if key is None:
+            return None
+        else:
+            for config in self.model_configs:
+                if config['key'] == key:
+                    return config
         return None

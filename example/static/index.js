@@ -43,26 +43,27 @@ $(document).ready(function () {
 
     // Update the prediction
     socket.on('device_status_response', function (msg, cb) {
-        const currentStatus = msg.data['current_status'];
+        debugger
         $('.usage').text('');
         // for (const [key, value] of Object.entries(currentStatus['sensor_data'])) {
         //     if (!value.is_enabled) {
         //         $(`#${key}-usage`).html('<i>(not in use)</i>')
         //     }
         // }
-        if (currentStatus['model'] != null) {
-            const model = currentStatus['model']
+        const new_config = msg.data['current_model_config']
+        if (new_config != null) {
+            const model = new_config
             $('#selectedModel').text(model['name']);
             $('#energy').text(model['energy']);
             $('#frequency').text(model['frequency']);
             $('#model-key').text(model['key']);
             $('#model-accuracy').text(model['accuracy']);
             $('#sensors').text('');
-            model.sensors.forEach((sensor) => {
+            model.inputs.forEach((sensor) => {
                 $('#sensors').append(`<li>${sensor}</li>`);
             });
         } else {
-            $('#selectedModel').text('No suitable model available');
+            $('#selectedModel').text('No suitable model configuration available');
             $('#energy').text('--');
             $('#frequency').text('--');
             $('#model-key').text('--');

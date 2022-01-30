@@ -16,8 +16,11 @@ def status():
 @app.route('/predict', methods=['POST'])
 def predict():
     prediction = prediction_service.predict(pd.read_json(request.get_json()))
-    return prediction
+    return {
+        'prediction': prediction
+    }
 
 
 if __name__ == '__main__':
+    adaptation_manager.load_modal_configs()
     app.run(port=5001, host='0.0.0.0')

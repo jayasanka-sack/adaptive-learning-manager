@@ -120,16 +120,19 @@ Sample request:
     Sample response:
     ```json
     {
-        "key": "model_config_01",
-        "name": "Model Config 01",
-        "inputs": [
-          "input_a",
-          "input_b",
-          "input_c"
-        ],
-        "path": "models.config_01",
-        "custom_key_1": "custom_value_1",
-        "custom_key_2": "custom_value_2"
+        "adapted": true,
+        "current_model_config": {
+            "key": "model_config_01",
+            "name": "Model Config 01",
+            "inputs": [
+              "input_a",
+              "input_b",
+              "input_c"
+            ],
+            "path": "models.config_01",
+            "custom_key_1": "custom_value_1",
+            "custom_key_2": "custom_value_2"
+        }
     }
     ```
 2. POST /predict 

@@ -26,31 +26,34 @@ required_sensors = []
 current_status = {
     'goal': 'ACCURACY',
     'sensor_data': {},
-    'model': None,
+    'model_config': None,
     'devices': []
 }
-devices = [
-    {
-        'name': 'phone',
+
+devices = {
+    'phone': {
         'sensors': [
             'phone_accel_x',
             'phone_accel_y',
             'phone_accel_z'
         ],
         'battery': 100,
-        'capacity': 0.5
+        'min_battery': 0,
+        'capacity': 0.5,
+        'isAvailable': False
     },
-    {
-        'name': 'watch',
+    'watch': {
         'sensors': [
             'watch_accel_x',
             'watch_accel_y',
             'watch_accel_z',
         ],
         'battery': 100,
-        'capacity': 0.1
+        'capacity': 0.1,
+        'min_battery': 0,
+        'isAvailable': False
     }
-]
+}
 
 DEFAULT_FREQUENCY = 20
 frequency = DEFAULT_FREQUENCY
@@ -58,15 +61,6 @@ segment_size = None
 # Read test data
 df = pd.read_csv('./data_compact.csv', header=None, names=column_names)
 counter = 0
-current_device_status = {
-    'phone': {
-        'battery': 100
-    },
-    'watch': {
-        'battery': 100
-    }
-}
-previous_device_status = {}
 
 
 # Simulation thread
@@ -82,20 +76,23 @@ def background_thread():
         steps = int(DEFAULT_FREQUENCY / frequency)
         i += steps
         counter += 1
-        for device in devices:
+        for device_key in devices:
+            device = devices[device_key]
+            previous_battery_level = device['battery']
             if set(required_sensors) & set(device['sensors']):
-                status = current_device_status[device['name']]
-                calculated_battery = status['battery'] - (1 / frequency) * current_status['model']['energy'] / 3600 / \
+                calculated_battery = device['battery'] - (1 / frequency) * current_status['model_config']['energy'] / 3600 / \
                                      device['capacity']
-                if abs(int(status['battery']) - int(calculated_battery)) > 0 and previous_device_status != {}:
-                    send_device_status(previous_device_status)
                 if calculated_battery > 0:
-                    status['battery'] = calculated_battery
+                    device['battery'] = calculated_battery
                 else:
-                    status['battery'] = 0
+                    device['battery'] = 0
+            # When battery level drops below the minimum
+            if previous_battery_level - device['min_battery'] < previous_battery_level - device['battery']:
+                send_current_context()
+
         socketio.emit('sensor_data', {
             'data': data,
-            'device_status': json.dumps(current_device_status)
+            'device_status': json.dumps(devices)
         })
         if segment_size is not None:
             if segment_size == counter:
@@ -117,8 +114,15 @@ def index():
 
 # Event to receive device status
 @socketio.event
-def device_status(message):
-    send_device_status(message)
+def device_status(status):
+    global current_status
+    current_status['goal'] = status['goal']
+    for device in status['devices']:
+        device_key = device['key']
+        devices[device_key]['isAvailable'] = device['isAvailable']
+        devices[device_key]['min_battery'] = float(device['min_battery'])
+
+    send_current_context()
 
 
 @socketio.event
@@ -144,7 +148,8 @@ def connect():
 
 @socketio.event
 def recharge_device(device):
-    current_device_status[device]['battery'] = 100
+    devices[device]['battery'] = 100
+    send_current_context()
 
 
 def predict(data):
@@ -157,8 +162,7 @@ def predict(data):
         app.logger.info('Failed to receive prediction')
         socketio.emit('prediction',
                       {'data': {
-                          'prediction': 'Failed to receive prediction',
-                          'current_model_key': None
+                          'prediction': 'Failed to receive prediction'
                       }})
 
 
@@ -167,24 +171,30 @@ def test_disconnect():
     print('Client disconnected', request.sid)
 
 
-def send_device_status(status):
-    global required_sensors, current_status, frequency, segment_size, counter, previous_device_status
+def send_current_context():
+    global required_sensors, current_status, frequency, segment_size, counter
     url = HAR_MANAGER + '/context'
-    for device in status['devices']:
-        if device['enabled'] = True:
+    context = {
+        'goal': current_status['goal'],
+        'inputs': []
+    }
+    for device_key in devices:
+        device = devices[device_key]
+        if device['isAvailable'] and device['battery'] > device['min_battery']:
+            context['inputs'].extend(device['sensors'])
 
     try:
-        previous_device_status = status
-        response = requests.post(url, json=status).json()
-        current_status = response['current_status']
-        if current_status['model'] is None:
+        response = requests.post(url, json=context).json()
+        new_model_config = response['current_model_config']
+        current_status['model_config'] = new_model_config
+        if new_model_config is None:
             required_sensors = []
             frequency = DEFAULT_FREQUENCY
         else:
-            required_sensors = current_status['model']['sensors']
-            frequency = current_status['model']['frequency']
-            segment_size = int(frequency * current_status['model']['interval'] / 1000)
-        if response['is_adapted']:
+            required_sensors = new_model_config['inputs']
+            frequency = new_model_config['frequency']
+            segment_size = int(frequency * new_model_config['interval'] / 1000)
+        if response['adapted']:
             counter = 0
         socketio.emit('device_status_response',
                       {'data': response},
