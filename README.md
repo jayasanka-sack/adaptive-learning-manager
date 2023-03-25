@@ -161,7 +161,7 @@ Sample request:
 
 ## Adding new goals
 
-Edit the [https://github.com/jayasanka-sack/adaptive-learning-manager/blob/main/adaptive_learning_manager/goals/__init__.py](/goals/__init__.py) file to add a new goal. You should write your own logic to pick the best model config from a provided set of configs.
+Edit the [/adaptive_learning_manager/goals/__init__.py](https://github.com/jayasanka-sack/adaptive-learning-manager/blob/main/adaptive_learning_manager/goals/__init__.py) file to add a new goal. You should write your own logic to pick the best model config from a provided set of configs.
 
 
     
