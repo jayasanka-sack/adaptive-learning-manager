@@ -1,7 +1,7 @@
 bidict==0.21.4
 certifi==2021.10.8
 charset-normalizer==2.0.7
-click==8.0.3
+click==8.1.7
 Flask==2.0.2
 Flask-SocketIO==5.1.1
 idna==3.3
